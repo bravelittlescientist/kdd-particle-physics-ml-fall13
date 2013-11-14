@@ -1,3 +1,4 @@
+# LaTeX gitignore
 *.acn
 *.acr
 *.alg
@@ -30,3 +31,5 @@
 *.vrb
 *.xdy
 *.tdo
+
+# TBD code gitignore
