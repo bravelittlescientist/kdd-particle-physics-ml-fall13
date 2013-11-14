@@ -6,7 +6,7 @@ A machine learning and data mining project based on the KDD Particle Physics dat
 
 [KDD 2004 Challenge](http://osmot.cs.cornell.edu/kddcup/)
 
-## Data 
+## Data
 
 [KDD Source](http://osmot.cs.cornell.edu/kddcup/datasets.html)
 
@@ -15,17 +15,20 @@ A machine learning and data mining project based on the KDD Particle Physics dat
 Github does not play well with large datasets, so we will maintain versions of our data in tarballs.
 
 Repository Structure
-/
-    data/
-        phys_raw.tgz
+    
+    /
+        data/
+            phy_raw.tgz
 
-To unpack,
-$ cd data && tar -zxf phys_raw.tar.gz
+To unpack:
+
+    $ cd data && tar -zxf phy_raw.tar.gz
 
 Then,
-/
-    data/
-        phys_raw.tgz
-        raw/
-            phy_test.dat
-            phy_train.dat    
+    
+    /
+        data/
+            phy_raw.tgz
+            raw/
+                phy_test.dat
+                phy_train.dat
