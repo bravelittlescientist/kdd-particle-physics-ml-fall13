@@ -1,5 +1,4 @@
-CS273a Fall 2013 - Final Project
-================================
+# CS273a Fall 2013 - Final Project
 
 A machine learning and data mining project based on the KDD Particle Physics dataset.
 
@@ -7,4 +6,26 @@ A machine learning and data mining project based on the KDD Particle Physics dat
 
 [KDD 2004 Challenge](http://osmot.cs.cornell.edu/kddcup/)
 
+## Data 
+
+[KDD Source](http://osmot.cs.cornell.edu/kddcup/datasets.html)
+
 [Physics Data - Original Archive](https://www.dropbox.com/s/bnjutmo2mv7g6xg/data_kddcup04.tar.gz)
+
+Github does not play well with large datasets, so we will maintain versions of our data in tarballs.
+
+Repository Structure
+/
+    data/
+        phys_raw.tgz
+
+To unpack,
+$ cd data && tar -zxf phys_raw.tar.gz
+
+Then,
+/
+    data/
+        phys_raw.tgz
+        raw/
+            phy_test.dat
+            phy_train.dat    
