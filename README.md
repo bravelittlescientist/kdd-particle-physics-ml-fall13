@@ -6,6 +6,10 @@ A machine learning and data mining project based on the KDD Particle Physics dat
 
 [KDD 2004 Challenge](http://osmot.cs.cornell.edu/kddcup/)
 
+## Design
+
+[scikit learn, ML for python](http://scikit-learn.org/stable/)
+
 ## Data
 
 [KDD Source](http://osmot.cs.cornell.edu/kddcup/datasets.html)
