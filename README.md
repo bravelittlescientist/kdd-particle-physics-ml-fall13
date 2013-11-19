@@ -8,6 +8,8 @@ A machine learning and data mining project based on the KDD Particle Physics dat
 
 ## Design
 
+See [Useful Methods](useful.md) to get started.
+
 [scikit learn, ML for python](http://scikit-learn.org/stable/)
 
 ## Data
