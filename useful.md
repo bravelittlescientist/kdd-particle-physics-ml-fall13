@@ -59,4 +59,10 @@ Splitting Related Data - Basic
 
 ### Loading Datasets
 
-### Algorithms
+### Evaluation Criteria
+
+* Maximize ACC (correct prediction %). Trivial to compute, # correct / total.
+* Maximize AUC (area under ROC curve) [ROC Example](http://scikit-learn.org/stable/auto_examples/plot_roc.html#example-plot-roc-py).
+* Minimize CXE (cross-entropy) [Cross-Entropy Example](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)
+* Maximize SLQ (Physics Q-Score). Need to write our own if we want to optimize; good description at [KDD 2004 site](http://osmot.cs.cornell.edu/kddcup/metrics.html).
+
