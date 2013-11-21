@@ -1,10 +1,10 @@
 # Useful Scikit-Learn Operations
 
-### Basics - Shuffling and Splitting
-
 Importing library
 
     >>> import sklearn
+
+### Basics - Shuffling and Splitting
 
 Some Starter Data
 
