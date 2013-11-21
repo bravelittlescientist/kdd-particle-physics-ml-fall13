@@ -9,7 +9,7 @@ A brief post-mortem of using Weka for KDD 2004 [PDF](references/pfahringer-2004-
 
 #### KDD 2004 Overview
 
-A good overview of the contest, may provide insight on approaches and data [PDF](eferences/caruana-2004-results-summary.pdf).
+A good overview of the contest, may provide insight on approaches and data [PDF](references/caruana-2004-results-summary.pdf).
     
     Rich Caruana, Thorsten Joachims, and Lars Backstrom. 2004. KDD-Cup 2004: results and analysis. 
     SIGKDD Explor. Newsl. 6, 2 (December 2004), 95-108.
