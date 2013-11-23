@@ -28,3 +28,10 @@ Good overview of scikit-learn and its motivations [PDF](references/pedregosa-201
 
     Fabian Pedregosa, et. al. 2011. Scikit-learn: Machine Learning in Python. 
     J. Mach. Learn. Res. 12 (November 2011), 2825-2830.
+
+#### Winners' Physics Report, 2004
+
+Describes methods used. Hopefully something about missing data? [PDF](references/vogel-2004-results.pdf)
+
+    David S. Vogel, Eric Gottschalk, and Morgan C. Wang. 2004. Anti-matter detection: 
+    particle physics model for KDD Cup 2004. SIGKDD Explor. Newsl. 6, 2 (December 2004), 109-112. 
