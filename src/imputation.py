@@ -60,6 +60,32 @@ def remove_features_missing_data(datapoints):
 
     return X_reduced
 
+def impute_missing_data(datapoints, strategy='mean'):
+    """ Inputes values for the 8 features missing data
+
+    Arguments:
+    datapoints -- X, a dataset with missing values represented 999.0 and 9999.0
+    strategy [optional] -- an imputation strategy,
+        e.g., mean, median, or most_frequent
+
+    Returns:
+    X_imputed -- a dataset with missing values imputed according to the
+        provided or default (mean) strategy.
+
+    Uses the scikit-learn Imputer class.
+    """
+    # First we will replace our placeholder values with NaN to only have
+    # to run one imputation.
+    np.putmask(datapoints, datapoints == 999.0, np.NaN)
+    np.putmask(datapoints, datapoints == 9999.0, np.NaN)
+
+    # Now create an imputer over NaN values, and average over axis=0 (columns)
+    # Then, fit the imputer to the dataset.
+    imp = Imputer(strategy=strategy, axis=0)
+    X_imputed = imp.fit_transform(datapoints)
+
+    return X_imputed
+
 if __name__ == "__main__":
     """ Load and impute training data """
 
@@ -77,4 +103,4 @@ if __name__ == "__main__":
     # X consists of 78 features, 8 of which contain 999.0 or 9999.0 to
     # represent missing values. For the purposes of this example, we want to
     # impute them rather than ignoring them.
-
+    X_imputed = impute_missing_data(X)
