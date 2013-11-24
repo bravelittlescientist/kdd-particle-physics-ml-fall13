@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-# Inspired b scikit-learn's imputation example, found here:
+# Inspired by scikit-learn's imputation example, found here:
 # http://scikit-learn.org/stable/auto_examples/imputation.html
 #
 # ... and their preprocessing documentation, found here:
