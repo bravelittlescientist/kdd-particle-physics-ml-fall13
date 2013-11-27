@@ -17,7 +17,7 @@ from metrics import suite
 
 from sklearn.ensemble import RandomForestClassifier
 
-def trainForest(Xtrain, Ytrain, n=100):
+def train(Xtrain, Ytrain, n=350):
     """ Use entirety of provided X, Y to train random forest
 
     Arguments
@@ -27,7 +27,7 @@ def trainForest(Xtrain, Ytrain, n=100):
     Returns
     forest -- A random forest of n estimators, fitted to Xtrain and Ytrain
     """
-    forest = RandomForestClassifier(n_estimators=n)
+    forest = RandomForestClassifier(n_estimators=n, max_depth=None, random_state=0, min_samples_split=1)
     forest.fit(Xtrain, Ytrain)
     return forest
 
@@ -44,6 +44,6 @@ if __name__ == "__main__":
         Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
         # Train a forest on it
-        forest = trainForest(Xt, Yt)
+        forest = train(Xt, Yt)
         print "Random Forest Ensemble Classifier"
         suite(Yv, forest.predict(Xv))
