@@ -13,7 +13,7 @@ import sys
 
 from imputation import load_data
 from util import shuffle_split
-from metrics import acc
+from metrics import suite
 
 from sklearn.ensemble import RandomForestClassifier
 
@@ -45,5 +45,5 @@ if __name__ == "__main__":
 
         # Train a forest on it
         forest = trainForest(Xt, Yt)
-        accuracy = acc(Yv, forest.predict(Xv))
-        print "Random Forest Ensemble Classifier:",accuracy*100,"%"
+        print "Random Forest Ensemble Classifier"
+        suite(Yv, forest.predict(Xv))
