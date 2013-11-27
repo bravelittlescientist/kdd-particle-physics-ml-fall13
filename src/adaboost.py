@@ -4,7 +4,7 @@
 
 import sys
 
-from util import get_split_training_dataset, write_test_prediction
+from util import get_split_training_dataset
 from metrics import suite
 
 from sklearn.ensemble import AdaBoostClassifier
@@ -34,6 +34,4 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = get_split_training_dataset()
     Classifier = train(Xt, Yt)
     print "Adaboost Classifier"
-    res = Classifier.predict(Xv)
-    write_test_prediction("res.txt", res, submission=False)
-    suite(Yv, res)
+    suite(Yv, Classifier.predict(Xv))
