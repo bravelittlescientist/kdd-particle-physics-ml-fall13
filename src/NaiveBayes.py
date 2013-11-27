@@ -1,14 +1,13 @@
 #!/usr/bin/python2
 
-# This is an Adaboost classifier
+# This is a Naive Bayes Classifier
 
 import sys
 
-from util import get_split_training_dataset, write_test_prediction
+from util import get_split_training_dataset
 from metrics import suite
 
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
 
 def train(Xtrain, Ytrain):
     """ Use entirety of provided X, Y to predict
@@ -23,9 +22,9 @@ def train(Xtrain, Ytrain):
     Returns
     classifier -- a tree fitted to Xtrain and Ytrain
     """
-    ada = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1), n_estimators=250)
-    ada.fit(Xtrain, Ytrain)
-    return ada
+    classifier = GaussianNB()
+    classifier.fit(Xtrain, Ytrain)
+    return classifier
 
 if __name__ == "__main__":
     # Let's take our training data and train a decision tree
@@ -33,7 +32,5 @@ if __name__ == "__main__":
     # validation.
     Xt, Xv, Yt, Yv = get_split_training_dataset()
     Classifier = train(Xt, Yt)
-    print "Adaboost Classifier"
-    res = Classifier.predict(Xv)
-    write_test_prediction("res.txt", res, submission=False)
-    suite(Yv, res)
+    print "Naive Bayes Classifier"
+    suite(Yv, Classifier.predict(Xv))

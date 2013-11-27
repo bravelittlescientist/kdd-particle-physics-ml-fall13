@@ -11,8 +11,7 @@
 
 import sys
 
-from imputation import load_data
-from util import shuffle_split
+from util import get_split_training_dataset
 from metrics import suite
 
 from sklearn.ensemble import RandomForestClassifier
@@ -27,23 +26,14 @@ def train(Xtrain, Ytrain, n=350):
     Returns
     forest -- A random forest of n estimators, fitted to Xtrain and Ytrain
     """
-    forest = RandomForestClassifier(n_estimators=n, max_depth=None, random_state=0, min_samples_split=1)
+    forest = RandomForestClassifier(n_estimators=n, max_depth=None, random_state=0, min_samples_split=1, max_features=9)
     forest.fit(Xtrain, Ytrain)
     return forest
 
 if __name__ == "__main__":
     # Let's take our training data and train a random forest
     # on a subset.
-
-    if len(sys.argv) < 2:
-        print "Usage: $ python decision-tree.py /path/to/data/file/"
-    else:
-        # Obtain and split/shuffle our training data
-        training = sys.argv[1]
-        X,Y,n,f = load_data(training)
-        Xt, Xv, Yt, Yv = shuffle_split(X,Y)
-
-        # Train a forest on it
-        forest = train(Xt, Yt)
-        print "Random Forest Ensemble Classifier"
-        suite(Yv, forest.predict(Xv))
+    Xt, Xv, Yt, Yv = get_split_training_dataset()
+    Classifier = train(Xt, Yt)
+    print "Random Forest Classifier"
+    suite(Yv, Classifier.predict(Xv))

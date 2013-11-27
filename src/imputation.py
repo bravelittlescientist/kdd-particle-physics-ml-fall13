@@ -19,7 +19,7 @@ import numpy.ma as ma
 
 from sklearn.preprocessing import Imputer
 
-def load_data(data_path):
+def load_data(data_path, load_y=True):
     """ Loads training dataset with numpy.
 
     Arguments:
@@ -32,9 +32,12 @@ def load_data(data_path):
     n_features -- number of features (expect 78)
     """
     X = np.loadtxt(data_path, usecols=range(2,80))
-    Y = np.loadtxt(data_path, usecols=(1,))
     n_samples = X.shape[0]
     n_features = X.shape[1]
+    if load_y == True:
+        Y = np.loadtxt(data_path, usecols=(1,))
+    else:
+        Y = np.array([0 for n in range(n_samples)])
 
     return X,Y,n_samples,n_features
 

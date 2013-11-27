@@ -84,3 +84,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# Log files in src
+src/*.txt

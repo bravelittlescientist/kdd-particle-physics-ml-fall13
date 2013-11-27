@@ -4,8 +4,7 @@
 
 import sys
 
-from imputation import load_data
-from util import shuffle_split
+from util import get_split_training_dataset
 from metrics import suite
 
 from sklearn.ensemble import GradientBoostingClassifier
@@ -31,13 +30,7 @@ if __name__ == "__main__":
     # Let's take our training data and train a decision tree
     # on a subset. Scikit-learn provides a good module for cross-
     # validation.
-
-    if len(sys.argv) < 2:
-        print "Usage: $ python decision-tree.py /path/to/data/file/"
-    else:
-        training = sys.argv[1]
-        X,Y,n,f = load_data(training)
-        Xt, Xv, Yt, Yv = shuffle_split(X,Y)
-        Classifier = train(Xt, Yt)
-        print "Gradient Boosting Classifier"
-        suite(Yv, Classifier.predict(Xv))
+    Xt, Xv, Yt, Yv = get_split_training_dataset()
+    Classifier = train(Xt, Yt)
+    print "Gradient Boost Classifier"
+    suite(Yv, Classifier.predict(Xv))
