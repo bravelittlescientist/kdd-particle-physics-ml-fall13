@@ -61,8 +61,8 @@ Splitting Related Data - Basic
 
 ### Evaluation Criteria
 
-* Maximize ACC (correct prediction %). Trivial to compute, # correct / total.
-* Maximize AUC (area under ROC curve) [ROC Example](http://scikit-learn.org/stable/auto_examples/plot_roc.html#example-plot-roc-py).
-* Minimize CXE (cross-entropy) [Cross-Entropy Example](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)
+* Maximize ACC (correct prediction %). Trivial to compute, # correct / total. [sklearn.metrics.acc](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score)
+* Maximize AUC (area under ROC curve) [ROC Example](http://scikit-learn.org/stable/auto_examples/plot_roc.html#example-plot-roc-py), [sklearn.metrics.roc_auc_score](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score)
+* Minimize CXE (cross-entropy) [Cross-Entropy / sklearn.metrics.log_loss](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html)
 * Maximize SLQ (Physics Q-Score). Need to write our own if we want to optimize; good description at [KDD 2004 site](http://osmot.cs.cornell.edu/kddcup/metrics.html).
 
