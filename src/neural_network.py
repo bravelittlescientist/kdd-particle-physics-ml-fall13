@@ -19,10 +19,20 @@ from pybrain.structure.modules   import SoftmaxLayer
 from pylab import ion, ioff, figure, draw, contourf, clf, show, hold, plot
 from scipy import diag, arange, meshgrid, where
 from numpy.random import multivariate_normal
+from numpy import mat
 
-class NeuralNetworkClassifier:
-    def __init__(self):
-        pass
+class NeuralNetworkClassifier(object):
+    def __init__(self, trainer):
+        self.trainer = trainer
+
+    def predict(self, data):
+        predictions = testOnClassData(dataset=tstdata)
+        '''
+        predictions = self.trainer.activateOnDataset(data)
+        predictions = predictions.argmax(axis=1)
+        #predictions = predictions.reshape(X.shape) ???
+        '''
+        return predictions
 
 def classify(Xtrain, Ytrain, n_hidden=5):
     """ Use entirety of provided X, Y to predict
@@ -36,38 +46,42 @@ def classify(Xtrain, Ytrain, n_hidden=5):
     """
 
     # PyBrain expects data in its DataSet format
-    trndata = ClassificationDataSet(Xv.shape[1], 1, nb_classes=2)
+    trndata = ClassificationDataSet(Xtrain.shape[1], nb_classes=2)
     trndata.setField('input', Xtrain)
-    trndata.setField('output', Ytrain)
+    # Apprently, arrays don't work here as they try to access second dimension size...
+    trndata.setField('target', mat(Ytrain).transpose())
+
     trndata._convertToOneOfMany() # one output neuron per class
 
     # build neural net and train it
     net = buildNetwork(trndata.indim, n_hidden, trndata.outdim, outclass=SoftmaxLayer)
     trainer = BackpropTrainer(net, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
 
-    #trainer.trainUntilConvergence()
-    trainer.trainEpochs(5)
+    trainer.trainUntilConvergence()
+    #trainer.trainEpochs(5)
 
-    # TODO
     # Return a functor that wraps calling predict
-
-    return trainer
+    return NeuralNetworkClassifier(trainer)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
+        training = '../data/raw/phy_train.dat'
         print "Usage: $ python neural_network.py /path/to/data/file/"
+        print "Using default data file:", training
     else:
         training = sys.argv[1]
-        X,Y,n,f = load_data(training)
-        Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
-        classifier = classify(Xt, Yt)
-        #predictions = classifier.predict(Xv)
-        tstdata = ClassificationDataSet(Xv.shape[1], 1, nb_classes=2)
-        tstdata.setField('input', Xv)
-        tstdata.setField('output', Yv)
-        tstdata._convertToOneOfMany() # one output neuron per class
+    X,Y,n,f = load_data(training)
+    Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
-        predictions = classifier.testOnClassData(dataset=tstdata)
+    classifier = classify(Xt, Yt)
 
-        print "Decision Tree Accuracy:",acc(Yv, predictions),"%"
+    tstdata = ClassificationDataSet(Xv.shape[1], 1, nb_classes=2)
+    tstdata.setField('input', Xv)
+    tstdata.setField('output', Yv)
+    tstdata._convertToOneOfMany() # one output neuron per class
+
+    predictions = classifier.predict(tstdata)
+
+    print "Decision Tree Accuracy:",acc(Yv, predictions),"%"
+
