@@ -59,6 +59,8 @@ Splitting Related Data - Basic
 
 ### Loading Datasets
 
+See [src/imputation.py](https://github.com/bravelittlescientist/kdd-particle-physics-ml-fall13/blob/master/src/imputation.py)
+
 ### Evaluation Criteria
 
 * Maximize ACC (correct prediction %). Trivial to compute, # correct / total. [sklearn.metrics.acc](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score)
