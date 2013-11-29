@@ -9,6 +9,7 @@ from util import get_split_training_dataset
 from metrics import suite
 
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.grid_search import GridSearchCV
 
 def train(Xtrain, Ytrain, n=250, d=None):
     """ Use entirety of provided X, Y to train random forest
@@ -20,7 +21,7 @@ def train(Xtrain, Ytrain, n=250, d=None):
     Returns
     classifier
     """
-    classifier = ExtraTreesClassifier(n_estimators=n, max_depth=d, min_samples_split = 1, random_state=0, max_features=9)
+    classifier = ExtraTreesClassifier(n_estimators=n, max_depth=d, min_samples_split = 1, random_state=0, max_features=36)
     classifier.fit(Xtrain, Ytrain)
     return classifier
 

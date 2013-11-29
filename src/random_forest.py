@@ -15,6 +15,7 @@ from util import get_split_training_dataset
 from metrics import suite
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.grid_search import GridSearchCV
 
 def train(Xtrain, Ytrain, n=350):
     """ Use entirety of provided X, Y to train random forest
@@ -24,16 +25,22 @@ def train(Xtrain, Ytrain, n=350):
     Ytrain -- Training prediction
 
     Returns
-    forest -- A random forest of n estimators, fitted to Xtrain and Ytrain
+    classifier -- A random forest of n estimators, fitted to Xtrain and Ytrain
     """
-    forest = RandomForestClassifier(n_estimators=n, max_depth=None, random_state=0, min_samples_split=1, max_features=9)
-    forest.fit(Xtrain, Ytrain)
-    return forest
+    forest = RandomForestClassifier(max_depth=None, random_state=0, min_samples_split=1,max_features=38)
+    parameters = {
+            'n_estimators': [200,250,300],
+    }
+
+    # Classify over grid of parameters
+    classifier = GridSearchCV(forest, parameters)
+    classifier.fit(Xtrain, Ytrain)
+    return classifier
 
 if __name__ == "__main__":
     # Let's take our training data and train a random forest
     # on a subset.
     Xt, Xv, Yt, Yv = get_split_training_dataset()
-    Classifier = train(Xt, Yt)
     print "Random Forest Classifier"
+    Classifier = train(Xt, Yt, n=n)
     suite(Yv, Classifier.predict(Xv))

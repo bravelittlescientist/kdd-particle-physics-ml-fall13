@@ -17,14 +17,14 @@ import gradient_boost
 import random_forest
 import logistic_regression
 
-from util import get_split_training_dataset
+from util import write_test_prediction, load_validation_data
 from metrics import acc
 
 import numpy as np
 
 if __name__ == "__main__":
     # First obtain our training and testing data
-    Xt, Xv, Yt, Yv = get_split_training_dataset()
+    Xt, Yt, Xv = load_validation_data()
 
     # Now, we train each classifier on the training data
     classifiers = [
@@ -37,9 +37,9 @@ if __name__ == "__main__":
     # Predict and vote
     predictions = [c.predict(Xv) for c in classifiers]
     majority = []
-    for data_index in range(len(Yv)):
+    for data_index in range(Xv.shape[0]):
         vote = round(sum([p[data_index] for p in predictions])/5.0)
         majority.append(vote)
 
     # Final accuracy
-    print acc(Yv, np.array(majority))
+    write_test_prediction("out.txt", np.array(majority))
