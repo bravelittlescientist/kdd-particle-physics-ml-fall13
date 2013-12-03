@@ -8,7 +8,7 @@ import sys
 from util import get_split_training_dataset
 from metrics import suite
 
-from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC, SVC
 
 def train(Xtrain, Ytrain):
     """ Use entirety of provided X, Y to predict
@@ -23,7 +23,7 @@ def train(Xtrain, Ytrain):
     Returns
     classifier -- a tree fitted to Xtrain and Ytrain
     """
-    classifier = LinearSVC()
+    classifier = SVC(kernel='linear', probability=True)
     classifier.fit(Xtrain, Ytrain)
     return classifier
 
