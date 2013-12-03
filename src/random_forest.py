@@ -17,7 +17,7 @@ from metrics import suite
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.grid_search import GridSearchCV
 
-def train(Xtrain, Ytrain, n=350):
+def train(Xtrain, Ytrain, n=350, grid=False):
     """ Use entirety of provided X, Y to train random forest
 
     Arguments
@@ -27,13 +27,17 @@ def train(Xtrain, Ytrain, n=350):
     Returns
     classifier -- A random forest of n estimators, fitted to Xtrain and Ytrain
     """
-    forest = RandomForestClassifier(max_depth=None, random_state=0, min_samples_split=1,max_features=38)
-    parameters = {
+    if grid == True:
+        forest = RandomForestClassifier(max_depth=None, random_state=0, min_samples_split=1,max_features=38)
+        parameters = {
             'n_estimators': [200,250,300],
-    }
+        }
 
-    # Classify over grid of parameters
-    classifier = GridSearchCV(forest, parameters)
+        # Classify over grid of parameters
+        classifier = GridSearchCV(forest, parameters)
+    else:
+        classifier = RandomForestClassifier(n_estimators=n)
+
     classifier.fit(Xtrain, Ytrain)
     return classifier
 
@@ -42,5 +46,5 @@ if __name__ == "__main__":
     # on a subset.
     Xt, Xv, Yt, Yv = get_split_training_dataset()
     print "Random Forest Classifier"
-    Classifier = train(Xt, Yt, n=n)
+    Classifier = train(Xt, Yt, n=200)
     suite(Yv, Classifier.predict(Xv))
