@@ -12,7 +12,7 @@ from metrics import suite
 
 from sklearn.ensemble import ExtraTreesClassifier
 
-def get_important_features(Xtrain, Ytrain, n=250, d=None):
+def get_important_features(Xtrain, Ytrain, n=250, d=None, threshold=0.01):
     """ Use entirety of provided X, Y to train random forest
 
     Arguments
@@ -33,7 +33,7 @@ def get_important_features(Xtrain, Ytrain, n=250, d=None):
 
     ranking = [[indices[f], importances[indices[f]]] for f in range(Xtrain.shape[1])]
 
-    ranking = filter(lambda r: r[1] >= .01, ranking)
+    ranking = filter(lambda r: r[1] >= threshold, ranking)
 
     return ranking
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # Let's take our training data and use a forest
     # to select the best features...
     Xt, Xv, Yt, Yv = get_split_training_dataset()
-    ranking = get_important_features(Xt, Yt)
+    ranking = get_important_features(Xt, Yt, threshold=0)
 
     print "Feature ranking:"
     for r in range(len(ranking)):
