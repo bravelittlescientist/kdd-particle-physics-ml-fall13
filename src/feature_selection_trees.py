@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # Let's take our training data and use a forest
     # to select the best features...
     Xt, Xv, Yt, Yv = get_split_training_dataset()
-    ranking = get_important_features(Xt, Yt, threshold=0)
+    ranking = get_important_features(Xt, Yt, threshold=0.02)
 
     print "Feature ranking:"
     for r in range(len(ranking)):
