@@ -25,16 +25,17 @@ class NeuralNetworkClassifier(object):
     def __init__(self, trainer):
         self.trainer = trainer
 
-    def predict(self, data):
-        predictions = testOnClassData(dataset=tstdata)
+    def predict(self, tstdata):
+        predictions = self.trainer.testOnClassData(dataset=tstdata)
         '''
         predictions = self.trainer.activateOnDataset(data)
         predictions = predictions.argmax(axis=1)
         #predictions = predictions.reshape(X.shape) ???
         '''
+        print predictions # it's giving all 0's!!
         return predictions
 
-def classify(Xtrain, Ytrain, n_hidden=5):
+def classify(Xtrain, Ytrain, n_hidden=[5], epocs_to_train=5):
     """ Use entirety of provided X, Y to predict
 
     Arguments
@@ -45,20 +46,22 @@ def classify(Xtrain, Ytrain, n_hidden=5):
     classifier -- a classifier fitted to Xtrain and Ytrain
     """
 
-    # PyBrain expects data in its DataSet format
-    trndata = ClassificationDataSet(Xtrain.shape[1], nb_classes=2)
-    trndata.setField('input', Xtrain)
     # Apprently, arrays don't work here as they try to access second dimension size...
-    trndata.setField('target', mat(Ytrain).transpose())
+    Ytrain = mat(Ytrain).transpose()
+
+    # PyBrain expects data in its DataSet format
+    trndata = ClassificationDataSet(Xtrain.shape[1], Ytrain.shape[1], nb_classes=2)
+    trndata.setField('input', Xtrain)
+    trndata.setField('target', Ytrain)
 
     trndata._convertToOneOfMany() # one output neuron per class
 
     # build neural net and train it
-    net = buildNetwork(trndata.indim, n_hidden, trndata.outdim, outclass=SoftmaxLayer)
+    net = buildNetwork(trndata.indim, *(n_hidden + [trndata.outdim]), outclass=SoftmaxLayer)
     trainer = BackpropTrainer(net, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
 
-    trainer.trainUntilConvergence()
-    #trainer.trainEpochs(5)
+    #trainer.trainUntilConvergence()
+    trainer.trainEpochs(epocs_to_train)
 
     # Return a functor that wraps calling predict
     return NeuralNetworkClassifier(trainer)
@@ -74,11 +77,14 @@ if __name__ == "__main__":
     X,Y,n,f = load_data(training)
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
-    classifier = classify(Xt, Yt)
+    classifier = classify(Xt, Yt, [100])
 
-    tstdata = ClassificationDataSet(Xv.shape[1], 1, nb_classes=2)
+    # Apprently, arrays don't work here as they try to access second dimension size...
+    Yv = mat(Yv).transpose()
+
+    tstdata = ClassificationDataSet(Xv.shape[1], Yv.shape[1], nb_classes=2)
     tstdata.setField('input', Xv)
-    tstdata.setField('output', Yv)
+    tstdata.setField('target', Yv)
     tstdata._convertToOneOfMany() # one output neuron per class
 
     predictions = classifier.predict(tstdata)
