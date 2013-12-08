@@ -41,7 +41,7 @@ def load_data(data_path, load_y=True):
 
     return X,Y,n_samples,n_features
 
-def remove_features_missing_data(datapoints):
+def remove_features_missing_data(X):
     """ Removes all datapoints that contain missing values.
 
     Arguments:
