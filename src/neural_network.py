@@ -89,6 +89,9 @@ class NeuralNetworkClassifier(object):
         net = buildNetwork(trndata.indim, *(n_hidden + [trndata.outdim]), outclass=SoftmaxLayer)
         trainer = BackpropTrainer(net, dataset=trndata, momentum=0.1, verbose=True, weightdecay=0.01)
 
+        with open('nn_progress_report.txt', 'a') as f:
+            f.write('training %s for %d epochs\n' % (self.params, epochs_to_train))
+
         #trainer.trainUntilConvergence()
         trainer.trainEpochs(epochs_to_train)
 
@@ -126,19 +129,19 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
     # Let's just get the top 10 features...
-    Xt, features = get_important_data_features(Xt, Yt, max_features=35)
+    Xt, features = get_important_data_features(Xt, Yt, max_features=25)
     # Do it for test data too...
     Xv = compress_data_to_important_features(Xv, features)
 
     classifier = NeuralNetworkClassifier()
 
-    params = {'n_hidden' : [[10], [25], [50], [100], [10 25 10]], 'epochs_to_train' : [10, 50, 100]}
-    param_search = GridSearchCV(classifier, params)
+    param_space = [{'n_hidden' : [[10], [25], [50], [100], [200], [500]], 'epochs_to_train' : [50, 150]}, # explore n_hidden
+              {'n_hidden' : [[50], [100]], 'epochs_to_train' : [10, 50, 100, 200, 500]}, # explore # epochs
+              {'n_hidden' : [[25, 50, 25], [50, 50], [100, 75, 50, 25], [25, 50, 75, 100], [25, 500, 100, 200, 150, 50]], 'epochs_to_train' : [50, 150]}, # explore multiple hidden layers
+              ]
+    param_search = GridSearchCV(classifier, param_space, n_jobs=8)
     param_search.fit(Xt, Yt)
+    print param_search.grid_scores_ # print scores for each set of parameters
     print classification_report(Yv, param_search.predict(Xv))
-
-    #n_hidden = [30]
-    #epochs_to_train = 1
-    #classifier.fit(Xt, Yt, n_hidden, epochs_to_train)
 
     #test_accuracy(classifier, Xt, Yt, Xv, Yv)
