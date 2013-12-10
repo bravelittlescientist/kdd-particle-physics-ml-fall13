@@ -129,16 +129,24 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
     # Let's just get the top 10 features...
-    Xt, features = get_important_data_features(Xt, Yt, max_features=25)
+    Xt, features = get_important_data_features(Xt, Yt, max_features=30)
     # Do it for test data too...
     Xv = compress_data_to_important_features(Xv, features)
 
     classifier = NeuralNetworkClassifier()
 
-    param_space = [{'n_hidden' : [[10], [25], [50], [100], [200], [500]], 'epochs_to_train' : [50, 150]}, # explore n_hidden
-              {'n_hidden' : [[50], [100]], 'epochs_to_train' : [10, 50, 100, 200, 500]}, # explore # epochs
-              {'n_hidden' : [[25, 50, 25], [50, 50], [100, 75, 50, 25], [25, 50, 75, 100], [25, 500, 100, 200, 150, 50]], 'epochs_to_train' : [50, 150]}, # explore multiple hidden layers
-              ]
+    param_spaces = [
+        [{'n_hidden' : [[10], [25], [50], [100], [200], [500]], 'epochs_to_train' : [50, 150]}, # explore n_hidden
+         {'n_hidden' : [[50], [100]], 'epochs_to_train' : [10, 50, 100, 200, 500]}, # explore # epochs
+         {'n_hidden' : [[25, 50, 25], [50, 50], [100, 75, 50, 25], [25, 50, 75, 100], [25, 500, 100, 200, 150, 50]], 'epochs_to_train' : [50, 150]}, # explore multiple hidden layers
+         ],
+        [{'n_hidden' : [[50, 25, 10]], 'epochs_to_train' : [500]}, # explore multiple hidden layers a bit further
+         {'n_hidden' : [[100], [200]], 'epochs_to_train' : [1000]}, # explore larger # epochs
+         {'n_hidden' : [[150], [125], [175]], 'epochs_to_train' : [200]}, # explore the order 100 n_hidden range
+         {'n_hidden' : [[5], [8], [10], [15], [20], [70], [85]], 'epochs_to_train' : [100]}, # explore the order 10 n_hidden range
+         ],
+        ]
+    param_space = param_spaces[1]
     param_search = GridSearchCV(classifier, param_space, n_jobs=8)
     param_search.fit(Xt, Yt)
     print param_search.grid_scores_ # print scores for each set of parameters
