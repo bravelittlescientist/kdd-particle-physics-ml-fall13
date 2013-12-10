@@ -7,11 +7,15 @@
 \begin{document}
 \maketitle
 
-% Let's just call it scikit-learn, no need for fancy text...
-
 \section{Introduction}
 
-%TODO
+The Knowledge Discovery and Data Mining (KDD) Cup in 2004 involved a problem for learning which of two classes a particle generated in a high energy collider belongs to.
+Data on 78 attributes was collected and collated into a training set of 50,000 points and a validation set of 100,000 points.
+Our team's task was to identify a classifier, and its associated hyper-parameters, to maximize classification on the test data with regards to one of four metrics.
+
+This report outlines our approach to this problem, what software we used, our design choices for the code we wrote to accomplish this task, which classifiers we used, and the results of our work.
+
+%TODO: discuss metrics more?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,17 +30,17 @@ For more efficient vector and matrix representations than standard lists, we nat
 
 To facilitate team-oriented development, we set up a repository on GitHub to easily merge incremental changes and improvements to our code as well as track task completion.
 
-\subsection{scikit learn}
+\subsection{scikit-learn}
 
 %TODO anything to add, @Eugenia?
 
-To learn the data and make predictions we used scikit learn \cite{pedregosa2011scikit}, one of the more mature Python-based machine learning libraries.
+To learn the data and make predictions we used scikit-learn \cite{pedregosa2011scikit}, one of the more mature Python-based machine learning libraries.
 It provides a fairly comprehensive list of classes implementing a common Classifier interface.
 This library also provides utility functions for working with data such as shuffling, splitting for cross-validation, and imputing data as well as metrics for scoring classifiers.
 
 \subsection{PyBrain}
 
-Neural networks currently are not fully supported in scikit learn; so we used PyBrain instead \cite{schaul2010}.
+Neural networks currently are not fully supported in scikit-learn; so we used PyBrain instead \cite{schaul2010}.
 PyBrain allows for programmatically creating arbitrary neural network structures, including multiple layers of hidden nodes.
 These networks are trained on numpy arrays of data using various training algorithms provided in the package.
 
@@ -60,23 +64,28 @@ We implemented each classifier as a separate Python script that:
 
 \end{enumerate}
 
-We also created a few utility files for interfacing with some of those from scikit learn.
+We also created a few utility files for interfacing with some of those from scikit-learn.
 These also include tasks such as outputting predictions on the test data in the proper format.
 
 %TODO: @Eugenia, anything to add?
 
 \subsection{Tuning Hyper-Parameters}
 
-%TODO:Eugenia's approach?
+%TODO:@Eugenia's approach?
+%TODO:tuning for various metrics?
 
-%TODO:@Kyle, GridSearchCV
+To tune the hyper-parameters of our classifiers, we explored many combinations at once and compared the results from each.
+From these, we chose the best parameters and explored slight modifications to them further, iterating this process several times until we saw no change in performance.
+The scikit-learn class GridSearchCV helped in this process.
+We defined a grid of possible parameters and it ran the given classifier on every combination of them with 3-fold cross-validation.
+It also provides an easy method for running multiple jobs in parallel, speeding up the exploration of each parameter space and reducing the time between tuning iterations.
 
 \subsection{Using Multiple Libraries}
 
-We mostly used scikit learn for learning the data; so our general design approach closely followed that of scikit learn, including the use of numpy arrays and matrices.
-To fit all our Classifiers to a common API, we wrote an adaptor class for a NeuralNetworkClassifier so that we could use PyBrain structures with the scikit learn Classifier interface.
+We mostly used scikit-learn for learning the data; so our general design approach closely followed that of scikit-learn, including the use of numpy arrays and matrices.
+To fit all our Classifiers to a common API, we wrote an adaptor class for a NeuralNetworkClassifier so that we could use PyBrain structures with the scikit-learn Classifier interface.
 This made using code applied to Classifiers from both packages easier to share between files and classifiers.
-For example, we used the GridSearchCV feature from scikit learn to quickly explore different parameters for the neural network training algorithm.
+For example, we used the GridSearchCV feature from scikit-learn to quickly explore different parameters for the neural network training algorithm.
 This approach worked especially well with proper version controlling as each team member could separately develop new features and then merge them without modifications due to working with different libraries.
 
 %TODO:@Eugenia, too verbose in technical detail here?
@@ -132,8 +141,9 @@ weka approach, which we didn't choose \cite{pfahringer2004weka}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
+%TODO
 
-% Yes, we need one, but I think it will emerge naturally as we get more results. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibliographystyle{IEEEtran}
 \bibliography{report}

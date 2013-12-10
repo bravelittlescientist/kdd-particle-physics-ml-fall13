@@ -28,18 +28,28 @@ if __name__ == "__main__":
 
     # Now, we train each classifier on the training data
     classifiers = [
-            adaboost.train(Xt, Yt),
-            extra_randomized_trees.train(Xt, Yt),
-            gradient_boost.train(Xt, Yt),
-            random_forest.train(Xt, Yt),
-            logistic_regression.train(Xt, Yt)]
+        #adaboost.train(Xt, Yt),
+        #extra_randomized_trees.train(Xt, Yt),
+        #gradient_boost.train(Xt, Yt),
+        #random_forest.train(Xt, Yt),
+        logistic_regression.train(Xt, Yt),
+        ]
+    
+    # Train another classifier on the ensembles output training predictions
+    # for each sample in the training data
+    training_predictions = np.mat([[c.predict(sample)[0] for c in classifiers] for sample in Xt])
 
-    # Predict and vote
-    predictions = [c.predict(Xv) for c in classifiers]
-    majority = []
-    for data_index in range(Xv.shape[0]):
-        vote = round(sum([p[data_index] for p in predictions])/5.0)
-        majority.append(vote)
+    meta_classifier = logistic_regression.train(training_predictions, Yt)
+
+    # Check results on training data
+    print "Accuracy for individual classifiers:", [acc(Yt, c.predict(Xt)) for c in classifiers]
+    print "Accuracy for ensemble classifier:", acc(Yt, meta_classifier.predict(Xt))
+
+    ### TEST DATA ###
+
+    # Predict on test data using the ensemble and meta classifier
+    predictions = np.mat([c.predict(Xv) for c in classifiers]).transpose()
+    final_predictions = meta_classifier.predict(predictions)
 
     # Final accuracy
-    write_test_prediction("out.txt", np.array(majority))
+    write_test_prediction("ensemble_predictions.txt", np.array(final_predictions))
