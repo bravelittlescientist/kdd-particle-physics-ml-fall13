@@ -1,45 +1,99 @@
 \documentclass{article}
 \usepackage[margin=1in]{geometry} % smaller margins
 
-\title{CS273A Report}
+\title{CS273A Project Report}
 \author{The Vectors Anonymous Support Group\\Kyle Benson, Eugenia Gabrielova}
 \date{December 2013}
 \begin{document}
 \maketitle
 
+%TODO fancy text formatting for scikit learn to emphasize it with the funny capitalization?
+
+
 \section{Introduction}
+
+%TODO
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Platform}
 
-Python, numpy
-git?
+This section explains which software libraries and tools we made use of and why we chose them.
+See Section \ref{implementation} for how we used them.
+
+\subsection{General}
+%TODO: this sounds like implementation details... move?
+We chose to implement this project in Python as we are both more familiar with it and prefer it over MATLAB\textregistered.
+For more efficient vector and matrix representations than standard lists, we naturally used the numpy library, as does the two machine learning libraries that we used.
+
+To facilitate team-oriented development, we set up a repository on GitHub to easily merge incremental changes and improvements to our code as well as track task completion.
 
 \subsection{scikit learn}
 
-scikit learn ref \cite{pedregosa2011scikit}
+%TODO anything to add, @Eugenia?
+
+To learn the data and make predictions we used scikit learn \cite{pedregosa2011scikit}, one of the more mature Python-based machine learning libraries.
+It provides a fairly comprehensive list of classes implementing a common Classifier interface.
+This library also provides utility functions for working with data such as shuffling, splitting for cross-validation, and imputing data as well as metrics for scoring classifiers.
 
 \subsection{PyBrain}
 
-Neural networks not fully suppored in scikit learn, use PyBrain instead \cite{schaul2010}
-Adapted to fit the Classifier interface provided by scikit learn
+Neural networks currently are not fully supported in scikit learn; so we used PyBrain instead \cite{schaul2010}.
+PyBrain allows for programmatically creating arbitrary neural network structures, including multiple layers of hidden nodes.
+These networks are trained on numpy arrays of data using various training algorithms provided in the package.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Implementation}
+\label{implementation}
+
+This section describes our design choices and reasoning for the software we wrote.
+
+\subsection{Design Overview}
+
+We implemented each classifier as a separate Python script that:
+\begin{enumerate}
+\item Loads the KDD physics data set
+\item Massages it into an appropriate format
+\item Trains a Classifier object on the data
+\item Prints scores for training and test data
+
+%TODO:cross-validation?
+
+\end{enumerate}
+
+We also created a few utility files for interfacing with some of those from scikit learn.
+These also include tasks such as outputting predictions on the test data in the proper format.
+
+%TODO: @Eugenia, anything to add?
+
+\subsection{Tuning Hyper-Parameters}
+
+%TODO:Eugenia's approach?
+
+%TODO:@Kyle, GridSearchCV
+
+\subsection{Using Multiple Libraries}
+
+We mostly used scikit learn for learning the data; so our general design approach closely followed that of scikit learn, including the use of numpy arrays and matrices.
+To fit all our Classifiers to a common API, we wrote an adaptor class for a NeuralNetworkClassifier so that we could use PyBrain structures with the scikit learn Classifier interface.
+This made using code applied to Classifiers from both packages easier to share between files and classifiers.
+For example, we used the GridSearchCV feature from scikit learn to quickly explore different parameters for the neural network training algorithm.
+This approach worked especially well with proper version controlling as each team member could separately develop new features and then merge them without modifications due to working with different libraries.
+
+%TODO:@Eugenia, too verbose in technical detail here?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data Preprocessing}
-
+%TODO
 Imputing missing data
 removing missing data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Classifiers}
-
+%TODO
 \subsection{Random Forests}
 
 \subsection{AdaBoost}
@@ -54,6 +108,7 @@ removing missing data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Feature Selection}
+%TODO
 how we did it
 why we did it
   missing data
@@ -61,7 +116,7 @@ why we did it
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Other stuff}
-
+%TODO
 2004 winners' report \cite{vogel2004anti}
 
 on ensembling \cite{caruana2004ensemble}
@@ -73,10 +128,12 @@ weka approach, which we didn't choose \cite{pfahringer2004weka}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
-
+%TODO
 \subsection{Accuracy}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%TODO: do we need a conclusion?
 
 \bibliographystyle{IEEEtran}
 \bibliography{report}
