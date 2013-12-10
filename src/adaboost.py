@@ -7,6 +7,8 @@ import sys
 from util import get_split_training_dataset
 from metrics import suite
 
+import feature_selection_trees as fclassify
+
 from sklearn.grid_search import GridSearchCV
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -42,3 +44,10 @@ if __name__ == "__main__":
     Classifier = train(Xt, Yt)
     print "Adaboost Classifier"
     suite(Yv, Classifier.predict(Xv))
+
+    # smaller feature set
+    Xtimp, features = fclassify.get_important_data_features(Xt, Yt, max_features=25)
+    Xvimp = fclassify.compress_data_to_important_features(Xv, features)
+    ClassifierImp = train(Xtimp,Yt)
+    print "Adaboosts Classiifer, 25 important features"
+    suite(Yv, ClassifierImp.predict(Xvimp))

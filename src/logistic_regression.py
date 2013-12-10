@@ -5,9 +5,10 @@
 
 import sys
 
-from imputation import load_data
-from util import shuffle_split
+from util import get_split_training_dataset
 from metrics import suite
+
+import feature_selection_trees as fclassify
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import PCA
@@ -45,13 +46,14 @@ if __name__ == "__main__":
     # Let's take our training data and train a decision tree
     # on a subset. Scikit-learn provides a good module for cross-
     # validation.
+    Xt, Xv, Yt, Yv = get_split_training_dataset()
+    Classifier = train(Xt, Yt)
+    print "PCA/Logistic Classifier"
+    suite(Yv, Classifier.predict(Xv))
 
-    if len(sys.argv) < 2:
-        print "Usage: $ python decision-tree.py /path/to/data/file/"
-    else:
-        training = sys.argv[1]
-        X,Y,n,f = load_data(training)
-        Xt, Xv, Yt, Yv = shuffle_split(X,Y)
-        Classifier = train(Xt, Yt)
-        print "Pipeline: PCA / Logistic Classifier"
-        suite(Yv, Classifier.predict(Xv))
+    # smaller feature set
+    Xtimp, features = fclassify.get_important_data_features(Xt, Yt, max_features=10)
+    Xvimp = fclassify.compress_data_to_important_features(Xv, features)
+    ClassifierImp = train(Xtimp,Yt)
+    print "Logistic Classiifer, ~36 important features"
+    suite(Yv, ClassifierImp.predict(Xvimp))

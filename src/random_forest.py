@@ -14,6 +14,8 @@ import sys
 from util import get_split_training_dataset
 from metrics import suite
 
+import feature_selection_trees as fclassify
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.grid_search import GridSearchCV
 
@@ -46,5 +48,12 @@ if __name__ == "__main__":
     # on a subset.
     Xt, Xv, Yt, Yv = get_split_training_dataset()
     print "Random Forest Classifier"
-    Classifier = train(Xt, Yt, n=200)
+    Classifier = train(Xt, Yt)
     suite(Yv, Classifier.predict(Xv))
+
+    # smaller feature set
+    Xtimp, features = fclassify.get_important_data_features(Xt, Yt)
+    Xvimp = fclassify.compress_data_to_important_features(Xv, features)
+    ClassifierImp = train(Xtimp,Yt)
+    print "Forest Classiifer, ~25 important features"
+    suite(Yv, ClassifierImp.predict(Xvimp))
