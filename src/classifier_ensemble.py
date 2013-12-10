@@ -28,10 +28,10 @@ if __name__ == "__main__":
 
     # Now, we train each classifier on the training data
     classifiers = [
-        #adaboost.train(Xt, Yt),
-        #extra_randomized_trees.train(Xt, Yt),
-        #gradient_boost.train(Xt, Yt),
-        #random_forest.train(Xt, Yt),
+        adaboost.train(Xt, Yt),
+        extra_randomized_trees.train(Xt, Yt),
+        gradient_boost.train(Xt, Yt),
+        random_forest.train(Xt, Yt),
         logistic_regression.train(Xt, Yt),
         ]
     
@@ -43,7 +43,8 @@ if __name__ == "__main__":
 
     # Check results on training data
     print "Accuracy for individual classifiers:", [acc(Yt, c.predict(Xt)) for c in classifiers]
-    print "Accuracy for ensemble classifier:", acc(Yt, meta_classifier.predict(Xt))
+    predictions = np.mat([c.predict(Xt) for c in classifiers]).transpose()
+    print "Accuracy for ensemble classifier:", acc(Yt, meta_classifier.predict(predictions))
 
     ### TEST DATA ###
 
