@@ -132,11 +132,11 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
     # Let's just get the top 10 features...
-    Xt, features = get_important_data_features(Xt, Yt, max_features=30)
+    Xt, features = get_important_data_features(Xt, Yt, max_features=20)
     # Do it for test data too...
     Xv = compress_data_to_important_features(Xv, features)
 
-    if True:
+    if False: #for running a NN with specific parameters
         classifier = NeuralNetworkClassifier(n_hidden=[10], epochs_to_train=1)
         classifier.fit(Xt, Yt)
 
@@ -153,12 +153,14 @@ if __name__ == "__main__":
              {'n_hidden' : [[150], [125], [175]], 'epochs_to_train' : [200]}, # explore the order 100 n_hidden range
              {'n_hidden' : [[5], [8], [10], [15], [20], [70], [85]], 'epochs_to_train' : [100]}, # explore the order 10 n_hidden range
              ],
+            [{'n_hidden' : [[5], [10], [20]], 'epochs_to_train' : [50, 100, 150]}, # explore # epochs for some of the better n_hidden values
+             ],
             ]
 
-        #param_space = param_spaces[1]
-        param_space = {'n_hidden': [[10]], 'epochs_to_train' : [1]}
+        param_space = param_spaces[2]
+        #param_space = {'n_hidden': [[10]], 'epochs_to_train' : [1]}
 
-        param_search = GridSearchCV(classifier, param_space, n_jobs=8)
+        param_search = GridSearchCV(classifier, param_space, n_jobs=7)
         param_search.fit(Xt, Yt)
         print param_search.grid_scores_ # print scores for each set of parameters
         print classification_report(Yv, param_search.predict(Xv))
