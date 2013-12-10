@@ -8,7 +8,7 @@
 import sys
 
 from imputation import load_data, remove_features_missing_data
-from util import shuffle_split
+from util import shuffle_split, load_validation_data, write_test_prediction
 from metrics import acc
 from feature_selection_trees import *
 
@@ -49,8 +49,10 @@ class NeuralNetworkClassifier(object):
         self.params['n_hidden'] = n_hidden
         self.params['epochs_to_train'] = epochs_to_train
 
-    def predict(self, tstdata):
-        predictions = self.trainer.testOnClassData(dataset=convert_to_pybrain_dataset(tstdata))
+    def predict(self, input_data):
+        input_data = convert_to_pybrain_dataset(input_data)
+
+        predictions = self.trainer.testOnClassData(dataset=input_data)
         return predictions
 
     def get_params(self, deep=False):
@@ -98,18 +100,19 @@ class NeuralNetworkClassifier(object):
         # Return a functor that wraps calling predict
         self.trainer = trainer
 
+    def save_test_results(self, Xt):
+        predictions = self.predict(Xt)
+        write_test_prediction("nn_predictions.txt", np.array(predictions))
+        
+
 def test_accuracy(classifier, Xt, Yt, Xv, Yv):
     # Apprently, arrays don't work here as they try to access second dimension size...
     Yv = mat(Yv).transpose()
     Yt = mat(Yt).transpose()
 
-    trndata = convert_to_pybrain_dataset(Xy, Yt)
-    # check accuracy of predictions on test data
-    tstdata = convert_to_pybrain_dataset(Xv, Yv)
-
-    predictions = classifier.predict(trndata)
+    predictions = classifier.predict(Xt)
     print "Neural Net Train Accuracy:",acc(Yt, predictions),"%"
-    predictions = classifier.predict(tstdata)
+    predictions = classifier.predict(Xv)
     print "Neural Net Test Accuracy:",acc(Yv, predictions),"%"
 
 if __name__ == "__main__":
@@ -123,7 +126,7 @@ if __name__ == "__main__":
     impute_data = True
     # load data from file, imputing data and/or removing some features if requested,
     # then shuffle and split into test and validation
-    X,Y,n,f = load_data(training)
+    X, Y, Xv = load_validation_data()
     if impute_data:
         X = remove_features_missing_data(X)
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
@@ -133,26 +136,32 @@ if __name__ == "__main__":
     # Do it for test data too...
     Xv = compress_data_to_important_features(Xv, features)
 
-    classifier = NeuralNetworkClassifier()
+    if True:
+        classifier = NeuralNetworkClassifier(n_hidden=[10], epochs_to_train=1)
+        classifier.fit(Xt, Yt)
 
-    param_spaces = [
-        [{'n_hidden' : [[10], [25], [50], [100], [200], [500]], 'epochs_to_train' : [50, 150]}, # explore n_hidden
-         {'n_hidden' : [[50], [100]], 'epochs_to_train' : [10, 50, 100, 200, 500]}, # explore # epochs
-         {'n_hidden' : [[25, 50, 25], [50, 50], [100, 75, 50, 25], [25, 50, 75, 100], [25, 500, 100, 200, 150, 50]], 'epochs_to_train' : [50, 150]}, # explore multiple hidden layers
-         ],
-        [{'n_hidden' : [[50, 25, 10]], 'epochs_to_train' : [500]}, # explore multiple hidden layers a bit further
-         {'n_hidden' : [[100], [200]], 'epochs_to_train' : [1000]}, # explore larger # epochs
-         {'n_hidden' : [[150], [125], [175]], 'epochs_to_train' : [200]}, # explore the order 100 n_hidden range
-         {'n_hidden' : [[5], [8], [10], [15], [20], [70], [85]], 'epochs_to_train' : [100]}, # explore the order 10 n_hidden range
-         ],
-        ]
+    else:
+        classifier = NeuralNetworkClassifier()
 
-    #param_space = param_spaces[1]
-    param_space = {'n_hidden': [[10]], 'epochs_to_train' : [1]}
+        param_spaces = [
+            [{'n_hidden' : [[10], [25], [50], [100], [200], [500]], 'epochs_to_train' : [50, 150]}, # explore n_hidden
+             {'n_hidden' : [[50], [100]], 'epochs_to_train' : [10, 50, 100, 200, 500]}, # explore # epochs
+             {'n_hidden' : [[25, 50, 25], [50, 50], [100, 75, 50, 25], [25, 50, 75, 100], [25, 500, 100, 200, 150, 50]], 'epochs_to_train' : [50, 150]}, # explore multiple hidden layers
+             ],
+            [{'n_hidden' : [[50, 25, 10]], 'epochs_to_train' : [500]}, # explore multiple hidden layers a bit further
+             {'n_hidden' : [[100], [200]], 'epochs_to_train' : [1000]}, # explore larger # epochs
+             {'n_hidden' : [[150], [125], [175]], 'epochs_to_train' : [200]}, # explore the order 100 n_hidden range
+             {'n_hidden' : [[5], [8], [10], [15], [20], [70], [85]], 'epochs_to_train' : [100]}, # explore the order 10 n_hidden range
+             ],
+            ]
 
-    param_search = GridSearchCV(classifier, param_space, n_jobs=8)
-    param_search.fit(Xt, Yt)
-    print param_search.grid_scores_ # print scores for each set of parameters
-    print classification_report(Yv, param_search.predict(Xv))
+        #param_space = param_spaces[1]
+        param_space = {'n_hidden': [[10]], 'epochs_to_train' : [1]}
 
-    #test_accuracy(classifier, Xt, Yt, Xv, Yv)
+        param_search = GridSearchCV(classifier, param_space, n_jobs=8)
+        param_search.fit(Xt, Yt)
+        print param_search.grid_scores_ # print scores for each set of parameters
+        print classification_report(Yv, param_search.predict(Xv))
+
+    test_accuracy(classifier, Xt, Yt, Xv, Yv)
+    classifier.save_test_results(Xv)
