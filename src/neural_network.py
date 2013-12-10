@@ -146,7 +146,10 @@ if __name__ == "__main__":
          {'n_hidden' : [[5], [8], [10], [15], [20], [70], [85]], 'epochs_to_train' : [100]}, # explore the order 10 n_hidden range
          ],
         ]
-    param_space = param_spaces[1]
+
+    #param_space = param_spaces[1]
+    param_space = {'n_hidden': [[10]], 'epochs_to_train' : [1]}
+
     param_search = GridSearchCV(classifier, param_space, n_jobs=8)
     param_search.fit(Xt, Yt)
     print param_search.grid_scores_ # print scores for each set of parameters
