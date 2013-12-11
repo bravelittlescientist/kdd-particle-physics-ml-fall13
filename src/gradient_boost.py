@@ -4,12 +4,14 @@
 
 import sys
 
-from util import get_split_training_dataset
+from util import get_split_training_dataset, write_test_prediction, load_validation_data
 from metrics import suite
 
 import feature_selection_trees as fclassify
 
 from sklearn.ensemble import GradientBoostingClassifier
+
+import numpy as np
 
 def train(Xtrain, Ytrain):
     """ Use entirety of provided X, Y to predict
@@ -43,3 +45,10 @@ if __name__ == "__main__":
     ClassifierImp = train(Xtimp,Yt)
     print "Gradient Boosts Classiifer, 25 important features"
     suite(Yv, ClassifierImp.predict(Xvimp))
+
+    # save predictions on test data
+    
+    X, Y, validation_data = load_validation_data()
+    predictions = Classifier.predict(validation_data)
+    filename = 'gradient_boost_predictions.txt'
+    write_test_prediction(filename, np.array(predictions))
