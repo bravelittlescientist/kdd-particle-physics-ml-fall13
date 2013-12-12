@@ -62,3 +62,19 @@ mean: 0.69528, std: 0.00253, params: {'epochs_to_train': 150, 'n_hidden': [20]}
 mean: 0.67027, std: 0.03316, params: {'epochs_to_train': 150, 'n_hidden': [20]}
 mean: 0.67621, std: 0.02682, params: {'epochs_to_train': 250, 'n_hidden': [20]}
 mean: 0.65920, std: 0.02463, params: {'epochs_to_train': 400, 'n_hidden': [20]}
+
+17 features:
+mean: 0.68285, std: 0.02109, params: {'epochs_to_train': 150, 'n_hidden': [5]}
+mean: 0.66485, std: 0.02546, params: {'epochs_to_train': 150, 'n_hidden': [20]}
+
+19 features:
+mean: 0.68637, std: 0.00753, params: {'epochs_to_train': 150, 'n_hidden': [5]}
+mean: 0.66933, std: 0.03158, params: {'epochs_to_train': 150, 'n_hidden': [20]}
+
+21 features:
+mean: 0.69235, std: 0.00369, params: {'epochs_to_train': 150, 'n_hidden': [5]}
+mean: 0.68853, std: 0.00953, params: {'epochs_to_train': 150, 'n_hidden': [20]}
+
+23 features:
+mean: 0.69467, std: 0.00089, params: {'epochs_to_train': 150, 'n_hidden': [5]}
+mean: 0.68368, std: 0.01542, params: {'epochs_to_train': 150, 'n_hidden': [20]}

@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-
+debug = True
 # This is a neural network based on PyBrain,
 # taking as input an X and Y and any tree complexity parameters, and
 # returning a classifier that can then be analyzed with the classifier.
@@ -123,31 +123,36 @@ if __name__ == "__main__":
     else:
         training = sys.argv[1]
 
-    impute_data = True
+    impute_data = False
     # load data from file, imputing data and/or removing some features if requested,
     # then shuffle and split into test and validation
-    X, Y, Xv = load_validation_data()
+    X, Y, test_data = load_validation_data()
     if impute_data:
         X = remove_features_missing_data(X)
+        test_data = remove_features_missing_data(test_data)
     Xt, Xv, Yt, Yv = shuffle_split(X,Y)
 
     # get the top features, running in parallel
     children = []
-    for n_features in [23, 21, 19, 17]:
+    for n_features in [20]:
+        '''for n_features in [23, 21, 19, 17]:
         children.append(os.fork())
         if children[-1]:
-            continue
-        Xt, features = get_important_data_features(Xt, Yt, max_features=n_features)
+        continue'''
+        X, features = get_important_data_features(X, Y, max_features=n_features)
+        print X.shape
         # Do it for test data too...
+        Xt = compress_data_to_important_features(Xt, features)
         Xv = compress_data_to_important_features(Xv, features)
+        test_data = compress_data_to_important_features(test_data, features)
 
-        if False: #for running a NN with specific parameters and outputting predictions on the test data
-            classifier = NeuralNetworkClassifier(n_hidden=[20], epochs_to_train=1)
-            classifier.fit(Xt, Yt)
+        if True: #for running a NN with specific parameters and outputting predictions on the test data
+            classifier = NeuralNetworkClassifier(n_hidden=[20], epochs_to_train=150 if not debug else 1)
+            classifier.fit(X, Y)
 
             # test the trained classifier
             test_accuracy(classifier, Xt, Yt, Xv, Yv)
-            classifier.save_test_results(Xv)
+            classifier.save_test_results(test_data)
 
         else:
             classifier = NeuralNetworkClassifier()
@@ -181,6 +186,6 @@ if __name__ == "__main__":
                 f.write("%d features:\n%s" % (n_features, str(param_search.grid_scores_).replace(',}','}\n'))) # print scores for each set of parameters
                 f.write(classification_report(Yv, param_search.predict(Xv)))
             
-    if children[-1] != 0:
+                '''if children[-1] != 0:
         for pid in children:
-            os.wait()
+            os.wait()'''
