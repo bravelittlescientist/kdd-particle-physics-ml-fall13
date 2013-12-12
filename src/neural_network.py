@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-debug = True
+debug = False
 # This is a neural network based on PyBrain,
 # taking as input an X and Y and any tree complexity parameters, and
 # returning a classifier that can then be analyzed with the classifier.
