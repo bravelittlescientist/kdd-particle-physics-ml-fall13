@@ -101,18 +101,6 @@ This made using code applied to Classifiers from both packages easier to share b
 For example, we used the GridSearchCV feature from scikit-learn to quickly explore different parameters for the neural network training algorithm.
 This approach worked especially well with proper version controlling as each team member could separately develop new features and then merge them without modifications due to working with different libraries.
 
-\subsection{Feature Selection}
-\label{feature_selection}
-
-\begin{figure}[!h]
-\centering
-\includegraphics{placeholder}
-\caption{Feature importances of particles physics data, ranked}
-\label{fig:placeholder2}
-\end{figure}
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data Preprocessing}
@@ -144,17 +132,37 @@ While we did not pursue imputation within disjoint sets due to the time constrai
 This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
 This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
 
-% TODO Kyle please comment on ensemble classifiers, citing \cite{caruana2004ensemble} if needed
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.75\textwidth]{crossval}
+\end{figure}
 
-\subsection{Classifier Cross-Validation}
- 
 \subsection{Random Forests}
 
-\subsection{AdaBoost}
+Two decision-tree ensemble methods provided excellent cross-validation results and were included in our stacked classifier.
+In addition to the familiar Random Forests, we also explored Extremely Random Trees.
+These ensembles use random rather than discriminative thresholds when choosing features. 
+They can decrease variance, but do potentially increase bias in a model.
+Un-tuned on a 5-fold cross-validation of our training data, random forests achieved .7166 accuracy and extremely random trees .7112 accuracy.
+Both classifiers were able to achieve .725 accuracy with parameter management. 
+The main concern with these ensembles is not over-complicating them.
+Helping the tree maintain their randomness helps avoid overfitting, especially when the best features are not available in a subset sample.
 
-\subsection{Gradient Boost}
+\subsection{Boosting}
+
+Adaboost generates a sequence of weak, weighted classifiers which, when combined,  can provide a good model of the data.
+With un-tuned parameters, Adaboost provided .7029 accuracy. It improved to approximately .72 when the model was tuned with input values.
+Though often used for regression, gradient boost algorithms can be modified to perform classification.
+The gradient boost algorithm performed surprisingly well in cross-validation, with .7253 accuracy.
+Later optimizations of the boosting models included varying estimator quantities (e.g., 100, 200, 300, 400), varying the learning rate (e.g., 1, 0.75...) and varying the complexity of the base decision stumps.
 
 \subsection{Logistic Regression}
+
+Pipelining PCA to reduce the dimension of the data, followed by the logistic regression itself, showed promising performance gains.
+More rigorous testing would be needed to obtain the optimal parameters. 
+Without pipelining, the logistic regression algorithm performed with .7087 accuracy on 5-fold cross-validation.
+Adding dimensionality reduction provided an immediate improvement, at which point the accuracy for this learner hovered around 0.72.
+Regularization and penalization parameters were useful to adjust here, but basic pipelining was enough to achieve good performance (without over-complicating) in many of our tests.
 
 \subsection{Neural Networks}
 
@@ -193,10 +201,7 @@ With more time, we could more thoroughly check these ranges to see if some value
 
 \begin{figure}[!h]
 \centering
-\begin{tabular}{cc}
-\includegraphics[width=0.45\textwidth]{feature_importance} &
-\includegraphics[width=0.45\textwidth]{crossval}
-\end{tabular}
+\includegraphics[width=0.45\textwidth]{feature_importance}
 \end{figure}
 
 Average 5-fold cross-validation accuracy of scikit-learn classifiers on training data (50K samples)
@@ -214,9 +219,6 @@ Average 5-fold cross-validation accuracy of scikit-learn classifiers on training
 \includegraphics[width=0.45\textwidth]{nn_epochs}
 \end{tabular}
 \end{figure}
-
-
-\subsection{Accuracy}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
