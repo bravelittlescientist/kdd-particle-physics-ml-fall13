@@ -27,7 +27,7 @@ if __name__ == "__main__":
         "Gradient Boost"      : GradientBoostingClassifier(),
         "Adaboost"            : AdaBoostClassifier(DecisionTreeClassifier(max_depth=1)),
         "Decision Tree"       : DecisionTreeClassifier(),
-        "Extra Random Trees"  : ExtraTreesClassifier(),
+        "Extra Random Trees"  : ExtraTreesClassifier(n_estimators=300),
         "Logistic Regression" : LogisticRegression(),
         "K-Nearest-Neighbors" : KNeighborsClassifier(),
         "SGD"                 : SGDClassifier(),

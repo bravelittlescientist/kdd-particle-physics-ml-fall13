@@ -12,7 +12,7 @@
 \section{Introduction}
 
 The Knowledge Discovery and Data Mining (KDD) Cup in 2004 included a binary classification problem for a particle generated in a high energy collider.
-Data on 78 attributes was collected and collated into a training set of 50,000 points and a validation set of 100,000 points.
+Data on 78 attributes was collected and collated into a training set of 50,000 points and a validation set of 100,000 points \cite{kddsubsite}.
 Our team's task was to identify a classifier, and its associated hyper-parameters, to maximize classification on the test data with regards to one of four metrics (accuracy, area under curve, log loss, and SLQ).
 
 This report outlines our approach to this problem, what software we used, our design choices for the code we wrote to accomplish this task, which classifiers we used, and the results of our work. We conclude with a discussion of trade-offs in our process and considerations for future work on this data. 
@@ -120,6 +120,8 @@ Feature selection is described in greater detail later in this report.
 
 The winners of the 2004 Bioinformatics division briefly comment on the missing data in the physics problem, recommending a customized cross-validation scheme with disjoint subsets. 
 We did not pursue this recommendation vigorously due to time constraints, though we briefly explored their approach of a 90/10 training/testing split \cite{pfahringer2004weka}.
+Another set of competitors is more pessimistic about imputation strategies, suggesting that traditional techniques may (1) cause information loss, and (2) obscure the unknown but likely relevant physical phenomena that resulted in missing data for some features \cite{vogel2004anti}.
+While we did not pursue imputation within disjoint sets due to the time constraints of the project, we note that this outside work provides valuable insight on possible trade-offs in future real-world problems.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -191,13 +193,7 @@ With more time, we could more thoroughly check these ranges to see if some value
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Other stuff}
-%TODO
-2004 winners' report \cite{vogel2004anti}
-
 on ensembling \cite{caruana2004ensemble}
-
-another kdd '04 perspective \cite{caruana2004kdd}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -237,6 +233,7 @@ TODO Comment on our findings, surprises, etc.
 In many real-world machine learning tasks, time and hardware constraints can limit the feasibility of fully exploring the problem space.
 In order to succeed in this project, we had no choice but to specialize classifiers, features, testing strategies, and ensemble combination approaches.
 Reflecting on the experience, we would be particularly interested on optimizing for a custom metric (such as SLQ) in the future.
+Some challenges of non-traditional metric evaluation or commented on in \cite{vogel2004anti}.
 Caruana notes in their overview of the KDD 2004 competition field \cite{caruana2004kdd} that optimizing for one parameter and submitting the data for comparison to another (e.g., accuracy optimized, then submitted to cross-entropy) yielded poor performance on the latter metric. 
 The SLQ metric is captivating because it is specific to the particle physics problem and its stakeholder research communities. 
 Our workflow for selecting and combining configurations of ensemble classifiers has helped us understand how to most effectively approach complex machine learning problems in our future research endeavours.
