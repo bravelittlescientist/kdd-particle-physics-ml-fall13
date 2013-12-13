@@ -79,11 +79,15 @@ Each classifier was tested individually and be executed (1) from the shell promp
 
 \subsection{Tuning Hyper-Parameters}
 \label{tuning_parameters}
-%TODO:@Eugenia's approach?
-%TODO:tuning for various metrics?
 
 To tune the hyper-parameters of our classifiers, we explored many combinations at once and compared the results from each.
-From these, we chose the best parameters and explored slight modifications to them further, iterating this process several times until we saw no change in performance.
+We drew upon our knowledge from the class to inform our optimization. 
+For example, though the class did not discuss random forests in depth, we found that random and extra random forests were effective classifiers.
+We recalled discussing in class the penalties of over-complicating random forest baggers.
+The number of estimators, parent split, and replacement strategies were worthwhile considerations for forests.
+Meanwhile, learning rate is a greater consideration in boosting algorithms such as gradient boost.
+
+From effective combinations of parameters, we chose the best parameters and explored slight modifications to them further, iterating this process several times until we saw no change in performance.
 The scikit-learn class GridSearchCV helped in this process.
 We defined a grid of possible parameters and it ran the given classifier on every combination of them with 3-fold cross-validation.
 It also provides an easy method for running multiple jobs in parallel, speeding up the exploration of each parameter space and reducing the time between tuning iterations.
@@ -96,8 +100,6 @@ To fit all our Classifiers to a common API, we wrote an adaptor class for a Neur
 This made using code applied to Classifiers from both packages easier to share between files and classifiers.
 For example, we used the GridSearchCV feature from scikit-learn to quickly explore different parameters for the neural network training algorithm.
 This approach worked especially well with proper version controlling as each team member could separately develop new features and then merge them without modifications due to working with different libraries.
-
-%TODO:@Eugenia, too verbose in technical detail here?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -130,6 +132,8 @@ While we did not pursue imputation within disjoint sets due to the time constrai
 This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
 This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
 
+% TODO Kyle please comment on ensemble classifiers, citing \cite{caruana2004ensemble} if needed
+
 \subsection{Classifier Cross-Validation}
 
 \begin{figure}[!h]
@@ -139,8 +143,7 @@ This selection is motivated by observing baseline performance of no-complexity-a
 \label{fig:placeholder}
 \end{figure}
 
-
-
+% TODO Genia comment on ranking
  
 \subsection{Random Forests}
 
@@ -178,7 +181,7 @@ We found that the defaults for these parameters provided by PyBrain were suffici
 When testing different parameters with GridSearchCV, we chose well-spaced values, such as 10, 25, 50, and 100 hidden nodes.
 With more time, we could more thoroughly check these ranges to see if some values in between these might actually improve our classifier.
 
-%TODO: quote about how long it takes to run deep belief networks, including with GPUs
+%TODO: Kyle quote about how long it takes to run deep belief networks, including with GPUs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -191,9 +194,7 @@ With more time, we could more thoroughly check these ranges to see if some value
 \label{fig:placeholder2}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-on ensembling \cite{caruana2004ensemble}
+% TODO Genia comment on features. Should this really be its own section?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
