@@ -75,7 +75,7 @@ A classifier is a Python script that:
 \item Predicts validation results either in cross-validation or on the 100K validation dataset; both are supported 
 \end{enumerate}
 
-Each classifier was tested individually and be executed (1) from the shell prompt, (2) from a python programming environment, or (3) as a library in another script (e.g., when stacking classifiers).
+Each classifier was tested individually and is executed (1) from the shell prompt, (2) from a python programming environment, or (3) as a library in another script (e.g., when stacking classifiers).
 
 \subsection{Tuning Hyper-Parameters}
 \label{tuning_parameters}
@@ -215,29 +215,36 @@ With more time, we could more thoroughly check these ranges to see if some value
 \section{Contributions}
 
 Eugenia implemented preprocessing functionality (imputation and feature selection) and tested 10 classifiers (without added complexity) with cross-validation on the testing data. 
-After finding the 5 most powerful base classifiers (those with > .7 training accuracy), she added some complexity parameters combined them into an unweighted majority-vote ensemble. 
+After finding the 5 most powerful base classifiers (those with $> .7$ training accuracy), she added some complexity parameters and combined them into an unweighted majority-vote ensemble. 
 After observing remarkable accuracy in the gradient boosting classifier for this data set, Eugenia decided to focus on its optimization.
 Though she tried to optimize both for area under curve and accuracy, she found that the classifier performed better with accuracy and focused complexity updates on that metric.
 She explored some academic literature concerning the 2004 KDD problems.
 
-Kyle was curious about the potential success of a Neural Network for classification of this data, and chose its accuracy as his focus metric. 
-He compared neural network options in the scikit-learn library with external libraries and selected pybrain to complete his work.
-He implemented a deep learner and added a wrapper to that it could be called with the same interface as the sci-kit learn classifiers.
-Kyle used the "Top 5" classifiers as features of a logistic classifier and evaluated a more weighted performance of the stacked ensembles.
+Kyle was curious about the potential success of a Neural Network for classification of this data, and chose its accuracy as his focus metric since it was already built into the library. 
+He compared neural network options in the scikit-learn library with external libraries and selected PyBrain to complete his work.
+He implemented a learner and added a wrapper to that it could be called with the same interface as the sci-kit learn classifiers, using GridSearchCV to quickly explore the parameter space.
+Kyle expanded on the stacked ensemble Eugenia created using the output predictions of the ``Top 5'' classifiers as input features of a logistic classifier.
+This involved creating a new dataset consisting of these output predictions for each data point and running the classifier with cross-validation.
+This dataset was then fed into the logistic classifier for training and another was created for the validation dataset to record the final predictions.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
 
 TODO Comment on our findings, surprises, etc.
+such as ensemble doing worse than individual learners
 
 In many real-world machine learning tasks, time and hardware constraints can limit the feasibility of fully exploring the problem space.
 In order to succeed in this project, we had no choice but to specialize classifiers, features, testing strategies, and ensemble combination approaches.
 Reflecting on the experience, we would be particularly interested on optimizing for a custom metric (such as SLQ) in the future.
-Some challenges of non-traditional metric evaluation or commented on in \cite{vogel2004anti}.
+Some challenges of non-traditional metric evaluation are commented on in \cite{vogel2004anti}.
 Caruana notes in their overview of the KDD 2004 competition field \cite{caruana2004kdd} that optimizing for one parameter and submitting the data for comparison to another (e.g., accuracy optimized, then submitted to cross-entropy) yielded poor performance on the latter metric. 
 The SLQ metric is captivating because it is specific to the particle physics problem and its stakeholder research communities. 
+
 Our workflow for selecting and combining configurations of ensemble classifiers has helped us understand how to most effectively approach complex machine learning problems in our future research endeavours.
+In particular, the use of automated functions for exploring parameter spaces in parallel proved quite effective in finding model parameters that produced high accuracy predictions.
+In the future, we intend to further automate this process by having the functions themselves determine which parameter values to try, rather than our approach of manually choosing spreads of values that was necessary due to very limited time and computational resources.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
