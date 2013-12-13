@@ -7,6 +7,8 @@
 \begin{document}
 \maketitle
 
+%TODO who did what?
+
 \section{Introduction}
 
 The Knowledge Discovery and Data Mining (KDD) Cup in 2004 included a binary classification problem for a particle generated in a high energy collider.
@@ -68,7 +70,7 @@ These also include tasks such as outputting predictions on the test data in the 
 %TODO: @Eugenia, anything to add?
 
 \subsection{Tuning Hyper-Parameters}
-
+\label{tuning_parameters}
 %TODO:@Eugenia's approach?
 %TODO:tuning for various metrics?
 
@@ -79,6 +81,7 @@ We defined a grid of possible parameters and it ran the given classifier on ever
 It also provides an easy method for running multiple jobs in parallel, speeding up the exploration of each parameter space and reducing the time between tuning iterations.
 
 \subsection{Using Multiple Libraries}
+\label{multiple_libraries}
 
 We mostly used scikit-learn for learning the data; so our general design approach closely followed that of scikit-learn, including the use of numpy arrays and matrices.
 To fit all our Classifiers to a common API, we wrote an adaptor class for a NeuralNetworkClassifier so that we could use PyBrain structures with the scikit-learn Classifier interface.
@@ -100,6 +103,9 @@ removing missing data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Classifiers}
+
+This section describes which classifiers we used as well as what parameters we found to work well and how we found them.
+ 
 %TODO
 \subsection{Random Forests}
 
@@ -111,6 +117,33 @@ removing missing data
 
 \subsection{Neural Networks}
 
+As described in Section \ref{multiple_libraries}, we wrote an adaptor class for PyBrain so that its neural network classes and functions extend the same interface as the scikit-learn Classifiers.
+We used feed-forward neural networks with a back-propagation trainer.
+As with the other classifiers, we imputed missing data and employed cross-validation.
+
+The parameters for this model that we explored are the number of hidden nodes (including multiple layers) and also the number of epochs to train the Classifier for.
+We primarily explored the various possibilities through the GridSearchCV function mentioned in Section \ref{tuning_parameters}.
+Through this mechanism, we discovered that larger numbers of hidden nodes typically must be trained for more epochs.
+However, we also found that training for too many epochs tended to overfit the training data, resulting in lower accuracy scores, especially when using cross-validation for testing.
+
+We tried several combinations of parameters for multiple layers of hidden nodes, but did not find any that improved accuracy.
+In fact, using multiple layers drastically decreased the accuracy, even when trained for a larger number of epochs.
+It is possible that we simply needed to train these networks for still larger numbers of epochs, or with different amounts of hidden nodes at each layer, to realize better scores.
+However, the possible combinations of parameters for multiple layers grows much faster than for a single hidden layer as the parameter space becomes a $k$-permutation of the number of nodes for $k$ layers.
+Additionally, multiple hidden layer networks require more CPU cycles, and therefore real time, to train for each epoch.
+Therefore, we decided to focus on a single hidden layer due to the time constraints of the project.
+
+After identifying a reasonable number of hidden nodes to use in a network and how many epochs to train it for, we explored reducing the number of features.
+We first noticed a dramatic improvement when only taking the 20 most informative features and so further explored numbers of features in the range [15,25].
+The best results for number of features and model parameters are presented in Section \ref{results}.
+
+Given more time to explore this problem, we could more fully enumerate and test different parameters.
+These would include parameters that affect the learning rate and gradient steps of the neural networks.
+We found that the defaults for these parameters provided by PyBrain were sufficient for our purposes and varying them would further increase the size of the parameter space to be explored.
+When testing different parameters with GridSearchCV, we chose well-spaced values, such as 10, 25, 50, and 100 hidden nodes.
+With more time, we could more thoroughly check these ranges to see if some values in between these might actually improve our classifier.
+
+%TODO: quote about how long it takes to run deep belief networks, including with GPUs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -135,6 +168,8 @@ weka approach, which we didn't choose \cite{pfahringer2004weka}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
+\label{results}
+
 %TODO
 \subsection{Accuracy}
 
