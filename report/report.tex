@@ -130,11 +130,13 @@ While we did not pursue imputation within disjoint sets due to the time constrai
 \section{Classifiers}
 
 This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
-This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
+Figure \ref{crossval} shows the average 5-fold cross-validation accuracy of scikit-learn classifiers with default parameters on the training data (50K samples).
+These results motivated our selection of which classifiers we should focus more on fine-tuning.
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.75\textwidth]{crossval}
+\label{crossval}
 \end{figure}
 
 \subsection{Random Forests}
@@ -150,17 +152,18 @@ Helping the tree maintain their randomness helps avoid overfitting, especially w
 
 \subsection{Boosting}
 
-Adaboost generates a sequence of weak, weighted classifiers which, when combined,  can provide a good model of the data.
-With un-tuned parameters, Adaboost provided .7029 accuracy. It improved to approximately .72 when the model was tuned with input values.
+AdaBoost generates a sequence of weak, weighted classifiers which, when combined, can provide a good model of the data.
+With un-tuned parameters, AdaBoost provided .7029 accuracy. It improved to approximately .72 when the model was tuned with input values.
+
 Though often used for regression, gradient boost algorithms can be modified to perform classification.
-The gradient boost algorithm performed surprisingly well in cross-validation, with .7253 accuracy.
-Later optimizations of the boosting models included varying estimator quantities (e.g., 100, 200, 300, 400), varying the learning rate (e.g., 1, 0.75...) and varying the complexity of the base decision stumps.
+The gradient boost algorithm performed surprisingly well in cross-validation tests with .7253 accuracy.
+Later optimizations of the boosting models included varying estimator quantities (e.g., 100, 200, 300, 400), varying the learning rate (e.g., 1, 0.75) and varying the complexity of the base decision stumps.
 
 \subsection{Logistic Regression}
 
-Pipelining PCA to reduce the dimension of the data, followed by the logistic regression itself, showed promising performance gains.
+Pipelining principle component analysis (PCA) to reduce the dimensionality of the data, followed by the logistic regression itself, showed promising performance gains.
 More rigorous testing would be needed to obtain the optimal parameters. 
-Without pipelining, the logistic regression algorithm performed with .7087 accuracy on 5-fold cross-validation.
+Without pipelining, the logistic regression algorithm performed with 0.7087 accuracy on 5-fold cross-validation.
 Adding dimensionality reduction provided an immediate improvement, at which point the accuracy for this learner hovered around 0.72.
 Regularization and penalization parameters were useful to adjust here, but basic pipelining was enough to achieve good performance (without over-complicating) in many of our tests.
 
@@ -210,12 +213,15 @@ We might have borrowed from these techniques as well as use more efficient imple
 \section{Results}
 \label{results}
 
+Figure \ref{feature_importance} shows the importance assigned to each feature as determined by PCA.
+We used this information to inform how many features we should try reducing our data to when training our classifiers.
+We noted that many of our models improved in accuracy with feature reduction.
+
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.45\textwidth]{feature_importance}
+\label{feature_importance}
 \end{figure}
-
-Average 5-fold cross-validation accuracy of scikit-learn classifiers on training data (50K samples)
 
 As seen in Figure \ref{nn_figs}, neural networks can overfit the data quite easily for certain numbers of hidden nodes.
 This dramatic drop in cross-validation accuracy due to training the models longer does not manifest at the same number of epochs for the numbers of hidden nodes (e.g. 5 and 20) that showed better performance.
