@@ -9,13 +9,11 @@
 
 \section{Introduction}
 
-The Knowledge Discovery and Data Mining (KDD) Cup in 2004 involved a problem for learning which of two classes a particle generated in a high energy collider belongs to.
+The Knowledge Discovery and Data Mining (KDD) Cup in 2004 included a binary classification problem for a particle generated in a high energy collider.
 Data on 78 attributes was collected and collated into a training set of 50,000 points and a validation set of 100,000 points.
-Our team's task was to identify a classifier, and its associated hyper-parameters, to maximize classification on the test data with regards to one of four metrics.
+Our team's task was to identify a classifier, and its associated hyper-parameters, to maximize classification on the test data with regards to one of four metrics (accuracy, area under curve, log loss, and SLQ).
 
-This report outlines our approach to this problem, what software we used, our design choices for the code we wrote to accomplish this task, which classifiers we used, and the results of our work.
-
-%TODO: discuss metrics more?
+This report outlines our approach to this problem, what software we used, our design choices for the code we wrote to accomplish this task, which classifiers we used, and the results of our work. We conclude with a discussion of trade-offs in our process and considerations for future work on this data. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -93,7 +91,9 @@ This approach worked especially well with proper version controlling as each tea
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data Preprocessing}
-%TODO
+
+	One challenge
+
 Imputing missing data
 removing missing data
 
@@ -137,6 +137,20 @@ weka approach, which we didn't choose \cite{pfahringer2004weka}
 \section{Results}
 %TODO
 \subsection{Accuracy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Contributions}
+
+Eugenia implemented preprocessing functionality (imputation and feature selection) and tested 10 classifiers (without added complexity) with cross-validation on the testing data. 
+After finding the 5 most powerful base classifiers (those with > .7 training accuracy), she added some complexity parameters combined them into an unweighted majority-vote ensemble. 
+After observing remarkable accuracy in the gradient boosting classifier for this data set, Eugenia decided to focus on its optimization.
+Though she tried to optimize both for area under curve and accuracy, she found that the classifier performed better with accuracy and focused complexity updates on that metric.
+
+Kyle was curious about the potential success of a Neural Network for classification of this data. 
+He compared neural network options in the scikit-learn library with external libraries and selected pybrain to complete his work.
+He implemented a deep learner and added a wrapper to that it could be called with the same interface as the sci-kit learn classifiers.
+Kyle used the "Top 5" classifiers as features of a logistic classifier and evaluated a more weighted performance of the stacked ensembles.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

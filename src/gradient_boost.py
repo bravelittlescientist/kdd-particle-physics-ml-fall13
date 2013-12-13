@@ -7,11 +7,13 @@ import sys
 from util import get_split_training_dataset
 from metrics import suite
 
+from sklearn.grid_search import GridSearchCV
+
 import feature_selection_trees as fclassify
 
 from sklearn.ensemble import GradientBoostingClassifier
 
-def train(Xtrain, Ytrain):
+def train(Xtrain, Ytrain, metric='accuracy'):
     """ Use entirety of provided X, Y to predict
 
     Default Arguments
@@ -19,12 +21,15 @@ def train(Xtrain, Ytrain):
     Ytrain -- Training prediction
 
     Named Arguments
-    C -- regularization parameter
+    metric -- string, accuracy or roc_auc
 
     Returns
     classifier -- a tree fitted to Xtrain and Ytrain
     """
-    classifier = GradientBoostingClassifier()
+    gbc = GradientBoostingClassifier(verbose=1)
+    parameters = {'max_depth' : range(3,11),'n_estimators' : [400,500]}
+
+    classifier = GridSearchCV(gbc, parameters, scoring=metric)
     classifier.fit(Xtrain, Ytrain)
     return classifier
 

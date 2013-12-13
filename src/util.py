@@ -8,7 +8,7 @@
 from sklearn.utils import shuffle
 from sklearn.cross_validation import train_test_split
 
-from imputation import load_data, impute_missing_data
+from imputation import load_data, impute_missing_data, remove_features_missing_data
 
 def shuffle_split(X,Y, train_size=0.75):
     """ Basic split and shuffle of X and Y
@@ -46,11 +46,11 @@ def load_validation_data():
     """
     # Load and impute validation data
     Xv, Yzero, nv, fv = load_data("../data/raw/phy_test.dat", load_y=False)
-    Xv = impute_missing_data(Xv)
+    Xv = remove_features_missing_data(Xv)
 
     # Load and impute training data
     Xt, Yt, nt, ft = load_data("../data/raw/phy_train.dat")
-    Xt = impute_missing_data(Xt)
+    Xt = remove_features_missing_data(Xt)
 
     return Xt, Yt, Xv
 
