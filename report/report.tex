@@ -144,10 +144,8 @@ While we did not pursue imputation within disjoint sets due to the time constrai
 This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
 This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
 
-% TODO Kyle please comment on ensemble classifiers, citing \cite{caruana2004ensemble} if needed
-
 \subsection{Classifier Cross-Validation}
- 
+
 \subsection{Random Forests}
 
 \subsection{AdaBoost}
@@ -155,6 +153,15 @@ This selection is motivated by observing baseline performance of no-complexity-a
 \subsection{Gradient Boost}
 
 \subsection{Logistic Regression}
+
+\subsection{Ensembles}
+
+We built an ensemble of our top classifiers to improve the accuracy above what any one of them could produce on their own.
+We started with a simple majority-vote scheme, but eventually trained a logistic classifer on the output predictions of each individual classifier to generate the ensemble's output predictions.
+However, we found that the ensemble as a whole did not tend to perform any better than the best of our classifiers alone.
+This may be due to us using such a small number of classifiers as other research indicates using many more than 5.
+For example, \cite{caruana2004ensemble} used 200 models in an ensemble out of a library of 2000 possible models.
+Given more time, we would explore more combinations of classifiers, including using multiple instances of a classifier (each with different parameters) and selecting which classifiers to use intelligently based on how much they improve training predictions for the overall ensemble.
 
 \subsection{Neural Networks}
 
@@ -183,8 +190,10 @@ These would include parameters that affect the learning rate and gradient steps 
 We found that the defaults for these parameters provided by PyBrain were sufficient for our purposes and varying them would further increase the size of the parameter space to be explored.
 When testing different parameters with GridSearchCV, we chose well-spaced values, such as 10, 25, 50, and 100 hidden nodes.
 With more time, we could more thoroughly check these ranges to see if some values in between these might improve our classifier.
-
-%TODO: Kyle quote about how long it takes to run deep belief networks, including with GPUs
+Furthermore, we could examine deep belief networks in greater detail to see if they perform better than a single layer of hidden nodes.
+Part of the problem with them was that they take very long to train and so exploring the many combinations of parameters proved difficult without more time and computational power.
+The authors of \cite{deep_belief} describe techniques used to efficiently train deep belief networks so that they may feasibly be used.
+We might have borrowed from these techniques as well as use more efficient implementations, i.e. run them on a GPU.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -201,11 +210,11 @@ With more time, we could more thoroughly check these ranges to see if some value
 
 Average 5-fold cross-validation accuracy of scikit-learn classifiers on training data (50K samples)
 
-% 
-% NN: overfit easily
-% different ideal # eepochs for different # hiddens
-% # features most important
-% multiple layers much worse
+As seen in Figure \ref{nn_figs}, neural networks can overfit the data quite easily for certain numbers of hidden nodes.
+This dramatic drop in cross-validation accuracy due to training the models longer does not manifest at the same number of epochs for the numbers of hidden nodes (e.g. 5 and 20) that showed better performance.
+Therefore, we concluded that the ideal number of epochs to train a network for also depends on the number of hidden nodes it has.
+We also see in these figures that reducing the number of features greatly enhances the performance of neural networks for this problem.
+In fact, it has more impact than the number of hidden nodes, although we did find that using multiple hidden layers (2-6 of them) reduced the performance nearly to that of guessing.
 
 \begin{figure}[!h]
 \centering
@@ -213,6 +222,7 @@ Average 5-fold cross-validation accuracy of scikit-learn classifiers on training
 \includegraphics[width=0.45\textwidth]{nn_features} &
 \includegraphics[width=0.45\textwidth]{nn_epochs}
 \end{tabular}
+\label{nn_figs}
 \end{figure}
 
 
