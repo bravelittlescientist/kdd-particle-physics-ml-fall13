@@ -118,6 +118,9 @@ Scikit-learn imputation documentation exists for basic imputation of a toy data 
 Much of the initial classifier exploration was performed with the imputed dataset.
 Feature selection is described in greater detail later in this report.
 
+The winners of the 2004 Bioinformatics division briefly comment on the missing data in the physics problem, recommending a customized cross-validation scheme with disjoint subsets. 
+We did not pursue this recommendation vigorously due to time constraints, though we briefly explored their approach of a 90/10 training/testing split \cite{pfahringer2004weka}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Classifiers}
@@ -125,12 +128,17 @@ Feature selection is described in greater detail later in this report.
 This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
 This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
 
+\subsection{Classifier Cross-Validation}
+
 \begin{figure}[!h]
 \centering
 \includegraphics{placeholder}
 \caption{Average 5-fold cross-validation accuracy of scikit-learn classifiers on training data (50K samples).}
 \label{fig:placeholder}
 \end{figure}
+
+
+
  
 \subsection{Random Forests}
 
@@ -191,8 +199,6 @@ on ensembling \cite{caruana2004ensemble}
 
 another kdd '04 perspective \cite{caruana2004kdd}
 
-weka approach, which we didn't choose \cite{pfahringer2004weka}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
@@ -215,8 +221,9 @@ Eugenia implemented preprocessing functionality (imputation and feature selectio
 After finding the 5 most powerful base classifiers (those with > .7 training accuracy), she added some complexity parameters combined them into an unweighted majority-vote ensemble. 
 After observing remarkable accuracy in the gradient boosting classifier for this data set, Eugenia decided to focus on its optimization.
 Though she tried to optimize both for area under curve and accuracy, she found that the classifier performed better with accuracy and focused complexity updates on that metric.
+She explored some academic literature concerning the 2004 KDD problems.
 
-Kyle was curious about the potential success of a Neural Network for classification of this data. 
+Kyle was curious about the potential success of a Neural Network for classification of this data, and chose its accuracy as his focus metric. 
 He compared neural network options in the scikit-learn library with external libraries and selected pybrain to complete his work.
 He implemented a deep learner and added a wrapper to that it could be called with the same interface as the sci-kit learn classifiers.
 Kyle used the "Top 5" classifiers as features of a logistic classifier and evaluated a more weighted performance of the stacked ensembles.
@@ -224,7 +231,15 @@ Kyle used the "Top 5" classifiers as features of a logistic classifier and evalu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
-%TODO
+
+TODO Comment on our findings, surprises, etc.
+
+In many real-world machine learning tasks, time and hardware constraints can limit the feasibility of fully exploring the problem space.
+In order to succeed in this project, we had no choice but to specialize classifiers, features, testing strategies, and ensemble combination approaches.
+Reflecting on the experience, we would be particularly interested on optimizing for a custom metric (such as SLQ) in the future.
+Caruana notes in their overview of the KDD 2004 competition field \cite{caruana2004kdd} that optimizing for one parameter and submitting the data for comparison to another (e.g., accuracy optimized, then submitted to cross-entropy) yielded poor performance on the latter metric. 
+The SLQ metric is captivating because it is specific to the particle physics problem and its stakeholder research communities. 
+Our workflow for selecting and combining configurations of ensemble classifiers has helped us understand how to most effectively approach complex machine learning problems in our future research endeavours.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

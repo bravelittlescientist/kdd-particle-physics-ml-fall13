@@ -17,12 +17,12 @@ from sklearn.svm import LinearSVC
 if __name__ == "__main__":
     # Get training data
     Xt, Yt, Xunused = load_validation_data()
-    
+
     # Cross validation, 5-fold
     cvf = 5
 
     # Initialize classifiers
-    classifiers = { 
+    classifiers = {
         "Naive Bayes"         : GaussianNB(),
         "Gradient Boost"      : GradientBoostingClassifier(),
         "Adaboost"            : AdaBoostClassifier(DecisionTreeClassifier(max_depth=1)),
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         "K-Nearest-Neighbors" : KNeighborsClassifier(),
         "SGD"                 : SGDClassifier(),
         "SVM"                 : LinearSVC(),
-        "Random Forest"       : RandomForestClassifier() 
+        "Random Forest"       : RandomForestClassifier(n_estimators=300)
     }
 
     for c in classifiers:
