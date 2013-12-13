@@ -74,7 +74,7 @@ def get_important_data_features(X, Y, max_features=39, threshold=.01):
     indices -- where to find numeric features, for use on test data
     """
     # Get important features
-    ranking = get_important_features(X, Y, threshold=threshold)
+    ranking = get_important_features(X, Y, threshold=threshold, verbose=True)
 
     # If there are more than the max allowed, trim them
     # Won't be effected if there are fewer.
@@ -93,12 +93,12 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = get_split_training_dataset()
 
     # Let's just get the top 10 features...
-    Ximp, features = get_important_data_features(Xt, Yt, max_features=10)
+    Ximp, features = get_important_data_features(Xt, Yt, max_features=80)
 
     # Do it for test data too...
-    Xvimp = compress_data_to_important_features(Xv, features)
+    #Xvimp = compress_data_to_important_features(Xv, features)
 
-    print "Original training data:",Xt.shape[0],"samples,",Xt.shape[1],"features"
-    print "Original validation data:",Xv.shape[0],"samples,",Xv.shape[1],"features"
-    print "Important training data:",Ximp.shape[0],"samples,",Ximp.shape[1],"features"
-    print "Important validation data:",Xvimp.shape[0],"samples,",Xvimp.shape[1],"features"
+    #print "Original training data:",Xt.shape[0],"samples,",Xt.shape[1],"features"
+    #print "Original validation data:",Xv.shape[0],"samples,",Xv.shape[1],"features"
+    #print "Important training data:",Ximp.shape[0],"samples,",Ximp.shape[1],"features"
+    #print "Important validation data:",Xvimp.shape[0],"samples,",Xvimp.shape[1],"features"
