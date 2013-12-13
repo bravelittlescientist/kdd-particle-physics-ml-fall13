@@ -7,8 +7,6 @@
 \begin{document}
 \maketitle
 
-%TODO who did what?
-
 \section{Introduction}
 
 The Knowledge Discovery and Data Mining (KDD) Cup in 2004 included a binary classification problem for a particle generated in a high energy collider.
@@ -27,16 +25,18 @@ See Section \ref{implementation} for how we used them.
 \subsection{Project Organization}
 We chose to implement this project in Python as we are both more familiar with it and prefer it over MATLAB\textregistered.
 For more efficient vector and matrix representations than standard lists, we naturally used the numpy library, as do the two machine learning libraries that we used.
+Matlab, despite its many virtues, can be slow - we were able to leverage parallel processing more effectively with Python, and thus run more experiments.
 
-To facilitate team-oriented development, we set up a repository on GitHub to easily merge incremental changes and improvements to our code as well as track task completion.
+To facilitate team-oriented development, we set up a repository on GitHub to easily merge incremental changes and improvements to our code as well as track task completion. 
 
 \subsection{scikit-learn}
 
-%TODO anything to add, @Eugenia?
-
 To learn the data and make predictions we used scikit-learn \cite{pedregosa2011scikit}, one of the more mature Python-based machine learning libraries.
-It provides a fairly comprehensive list of classes implementing a common Classifier interface.
+It provides a comprehensive list of classes implementing a common Classifier interface for easy comparison.
+Utilities exist for both supervised and unsupervised techniques.
 This library also provides utility functions for working with data such as shuffling, splitting for cross-validation, and imputing data as well as metrics for scoring classifiers.
+Scikit-learn includes some precompiled binaries to improve its performance on large data.
+We found the library rewarding and easy-to-learn, which helped us focus our energy on exploring the dataset rather than on climbing a steep learning curve.
 
 \subsection{PyBrain}
 
@@ -53,21 +53,27 @@ This section describes our design choices and reasoning for the software we wrot
 
 \subsection{Design Overview}
 
-We implemented each classifier as a separate Python script that:
+We implemented a set of utility scripts for data loading and preprocessing that are shared among classifiers. Some functionality we created includes:
 \begin{enumerate}
-\item Loads the KDD physics data set
-\item Massages it into an appropriate format
-\item Trains a Classifier object on the data
-\item Prints scores for training and test data
-
-%TODO:cross-validation?
-
+\item Unpacking and loading the KDD physics data set
+\item Massaging it into the format preferred by the user (e.g., selecting or removing subsets of features)
+\item Splitting training data for cross-validation
+\item Facilitating voting among classifiers
+\item Reporting results according to the metrics of the contest
+\item Writing validation predictions to a submission-format text file
 \end{enumerate}
 
-We also created a few utility files for interfacing with some of those from scikit-learn.
-These also include tasks such as outputting predictions on the test data in the proper format.
+We describe detailed approaches to classifier design and tuning later in the report. 
+We agreed early in the brainstorming process to implement classifiers uniformly to facilitate stacking, parameter search, and comparison. 
+A classifier is a Python script that: 
 
-%TODO: @Eugenia, anything to add?
+\begin{enumerate}
+\item Receives as input training data and predictions
+\item Trains a Classifier object on the data
+\item Predicts validation results either in cross-validation or on the 100K validation dataset; both are supported 
+\end{enumerate}
+
+Each classifier was tested individually and be executed (1) from the shell prompt, (2) from a python programming environment, or (3) as a library in another script (e.g., when stacking classifiers).
 
 \subsection{Tuning Hyper-Parameters}
 \label{tuning_parameters}
@@ -95,10 +101,20 @@ This approach worked especially well with proper version controlling as each tea
 
 \section{Data Preprocessing}
 
-	One challenge
+One challenging aspect of the KDD 2004 competition was the lack of information specifying particular features.
+The purpose of this omission is to avoid an unfair advantage for competitors familiar with particle physics.
+Lacking a grounding in the intricate quirks (and quarks) of particle physics, the authors of this documentation point out that we appreciate this foresight.
+The data is provided with numerically labelled features, 8 of which contain missing data.
+This data is represented as 999 or 9999.
 
-Imputing missing data
-removing missing data
+Two approaches emerged for preprocessing.
+First, it was straightforward to remove columns with missing features entirely using numpy's column compression feature.
+Another option is to impute missing values, using a strategy of mean or median values.
+At this point in the project we had not explored feature selection and were unsure of the relevance of the features missing data.
+We implemented both strategies - one preprocessing function removes any features missing values, and the other imputes based on mean value.
+Scikit-learn imputation documentation exists for basic imputation of a toy data set feature, but required extensive testing to be suitable for the physics dataset.
+Much of the initial classifier exploration was performed with the imputed dataset.
+Feature selection is described in greater detail later in this report.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
