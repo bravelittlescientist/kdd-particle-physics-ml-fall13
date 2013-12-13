@@ -1,4 +1,6 @@
 \documentclass{article}
+
+\usepackage{graphics} % for EPS, load graphicx instead
 \usepackage[margin=1in]{geometry} % smaller margins
 
 \title{CS273A Project Report}
@@ -120,9 +122,16 @@ Feature selection is described in greater detail later in this report.
 
 \section{Classifiers}
 
-This section describes which classifiers we used as well as what parameters we found to work well and how we found them.
+This section describes which classifiers we used as well as what parameters we found to work well and how we found them. 
+This selection is motivated by observing baseline performance of no-complexity-added scikit-learn classifiers.
+
+\begin{figure}[!h]
+\centering
+\includegraphics{placeholder}
+\caption{Average 5-fold cross-validation accuracy of scikit-learn classifiers on training data (50K samples).}
+\label{fig:placeholder}
+\end{figure}
  
-%TODO
 \subsection{Random Forests}
 
 \subsection{AdaBoost}
@@ -164,10 +173,13 @@ With more time, we could more thoroughly check these ranges to see if some value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Feature Selection}
-%TODO
-how we did it
-why we did it
-  missing data
+
+\begin{figure}[!h]
+\centering
+\includegraphics{placeholder}
+\caption{Feature importances of particles physics data, ranked}
+\label{fig:placeholder2}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -186,7 +198,13 @@ weka approach, which we didn't choose \cite{pfahringer2004weka}
 \section{Results}
 \label{results}
 
-%TODO
+\begin{figure}[!h]
+\centering
+\includegraphics{placeholder}
+\caption{Test Data Performance}
+\label{fig:placeholder3}
+\end{figure}
+
 \subsection{Accuracy}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
