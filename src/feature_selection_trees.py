@@ -93,7 +93,7 @@ if __name__ == "__main__":
     Xt, Xv, Yt, Yv = get_split_training_dataset()
 
     # Let's just get the top 10 features...
-    Ximp, features = get_important_data_features(Xt, Yt, max_features=80)
+    Ximp, features = get_important_data_features(Xt, Yt, threshold=0.0, max_features=80)
 
     # Do it for test data too...
     #Xvimp = compress_data_to_important_features(Xv, features)
